@@ -1,5 +1,6 @@
 package com.sanmidev.yetanotheranimelist.presentation.upComingAnimes
 
+import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.github.javafaker.Faker
@@ -49,6 +50,9 @@ class UpComingAnimesViewModelTest {
     @Mock
     lateinit var observer: Observer<AnimeListResult>
 
+    @Mock
+    lateinit var application: Application
+
     @Before
     fun setUp() {
         retrofit = NetworkTestUtils.provideRetrofit(mockWebServer)
@@ -56,12 +60,12 @@ class UpComingAnimesViewModelTest {
         generatedData = DataUtils.generateAnimeListResponse(faker)
         jikanService = retrofit.create(JikanService::class.java)
         jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper, moshi)
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler())
+        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
     }
 
     @Test
     fun getUpComingAnimes_shouldReturnAnimeResultSuccess_whenRequestIsSuccesfull() {
-//GIVEN
+            //GIVEN
         mockWebServer.enqueue(
             MockResponse()
                 .setBody(AnimeListResponseJsonAdapter(moshi).toJson(generatedData.first))

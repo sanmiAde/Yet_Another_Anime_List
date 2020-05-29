@@ -21,6 +21,8 @@ import java.net.HttpURLConnection
 
 class JikanRepositoryImplTest {
 
+
+
     @get:Rule
     val mockWebServer = MockWebServer()
 
@@ -78,6 +80,13 @@ class JikanRepositoryImplTest {
 
         //THEN
         Truth.assertThat(result.animeListErrorRespones).isEqualTo(DataUtils.getAnimeListErrorResponse())
+    }
+
+    @Test
+    fun AnimeListResponseJsonAdapter_ShouldReturnListOfAnime_WhenActualDataIsUsed(){
+        val animeListResponseJsonAdapter = AnimeListResponseJsonAdapter(moshi).fromJson(DataUtils.animeListtestJSonData)
+
+        Truth.assertThat(animeListResponseJsonAdapter!!.animeResponses).hasSize(50)
     }
 
     @After

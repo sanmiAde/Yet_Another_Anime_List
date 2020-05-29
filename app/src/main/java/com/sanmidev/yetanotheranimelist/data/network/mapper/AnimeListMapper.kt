@@ -6,7 +6,17 @@ import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.AnimeResponse
 import javax.inject.Inject
 
+/**
+ * Mapper class for mapping [AnimeListResponse] to [AnimeEntityList]
+ */
+
 class AnimeListMapper @Inject constructor() {
+
+    /***
+     * Transforms [AnimeListResponse] to [AnimeEntityList]
+     * @param animeListResponse from the server
+     * @return AnimeEnityList is the transformed object.
+     */
     fun transformAnimeListToEntity(animeListResponse: AnimeListResponse) : AnimeEntityList {
         val animeEntities = mutableListOf<AnimeEntity>()
          animeListResponse.animeResponses.map { animeResponse: AnimeResponse ->

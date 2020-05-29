@@ -12,11 +12,21 @@ import retrofit2.Response
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
+/***
+ * Concrete implementation fo [JikanRepository]
+ * Used to interact with APIs from Jikan Anime Service.
+ */
 class JikanRepositoryImpl @Inject constructor(
     val jikanService: JikanService,
     val animeListMapper: AnimeListMapper,
     val moshi: Moshi
 ) : JikanRepository {
+    /***
+     * Gets upcoming animes from the jikan end point and maps to the respective entity depending on the status code returned.
+     * @param page is the current page on the  MAL website.
+     *
+     *
+     */
     override fun getUpComingAnimeList(page: Int): Single<AnimeListResult> {
         return jikanService.getUpandComingAnime(page.toString())
             .map { responseBody: Response<ResponseBody> ->
