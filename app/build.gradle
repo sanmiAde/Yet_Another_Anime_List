@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
@@ -11,7 +15,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -21,17 +25,117 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        QA {
+            applicationIdSuffix = '.QA'
+            versionNameSuffix = '.QA'
+            debuggable = true
+        }
+        debug {
+            applicationIdSuffix = '.debug'
+            versionNameSuffix = '.debug'
+        }
     }
+
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    //core
+    implementation "androidx.appcompat:appcompat:$app_compat_version"
+    implementation "androidx.core:core-ktx:$core_kt_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "com.google.android.material:material:$material_components_version"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefresh_version"
+
+    //AAC
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    //saved state for viewmodel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    // Test helpers for LiveData
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
+    implementation 'com.google.firebase:firebase-analytics:17.4.1'
+    testImplementation "androidx.arch.core:core-testing:$arch_version"
+
+    // navigation components
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+
+    //room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+
+    // Test helpers room
+    testImplementation "androidx.room:room-testing:$room_version"
+
+
+    //Dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    //Dagger assisted inject
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assisted_inject_version"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assisted_inject_version"
+
+    //GLide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$moshi_converter_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rx_java_adapter_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$retrofit_interceptor_version"
+
+
+    //Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+
+    //rxjava
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java2_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rx_kotlin2_version"
+
+    //test
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$expresso_core_version"
+
+    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
+    androidTestImplementation "androidx.arch.core:core-testing:$core_testing_version"
+
+    //faker
+    testImplementation "com.github.javafaker:javafaker:$faker_version"
+    androidTestImplementation "com.github.javafaker:javafaker:$faker_version"
+
+    //mockwebserver
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mock_web_server_version"
+    testImplementation("com.squareup.okhttp3:okhttp:$mock_web_server_version")
+
+    //mockito-kotlin
+    testImplementation("com.nhaarman:mockito-kotlin:$mockito_kotlin_version") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
+
+    //Truth
+    testImplementation "com.google.truth:truth:$truth_version"
 }

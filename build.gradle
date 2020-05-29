@@ -1,16 +1,91 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.72'
+    ext {
+        kotlin_version = '1.3.72'
+
+        //core
+        app_compat_version = '1.2.0-beta01'
+        core_kt_version = '1.2.0'
+        androidx_version = '1.1.0'
+        fragment_version = '1.2.0-rc02'
+        constraint_layout_version =  '1.1.3'
+        material_components_version = '1.2.0-alpha06'
+        recyclerview_version = '1.1.0'
+        legacy_support_version = '1.0.0'
+
+        //AAC
+        nav_version = '2.2.2'
+        lifecycle_version ='2.2.0'
+        arch_version = "2.1.0"
+        room_version = "2.2.5"
+
+        //moshi
+        moshi_version = '1.9.2'
+        moshi_converter_version = '2.3.0'
+
+        //retrofit
+        retrofit_interceptor_version = '4.2.1'
+        retrofit_version = '2.3.0'
+        rx_java_adapter_version = '2.3.0'
+
+        //rxjava
+        rx_java2_version = '2.2.19'
+        rx_kotlin2_version = "2.4.0"
+        rx_android_version = "2.1.1"
+
+        //testing
+        junit_version = '4.12'
+        junit_android_version = '1.1.1'
+        mockito_version = '2.27.0'
+        core_testing_version = '2.0.1'
+        mockito_kotlin_version = '1.6.0'
+        expresso_core_version = '3.2.0'
+
+        //dagger
+        dagger_version = '2.24'
+
+        //timber
+        timber_version = '4.7.1'
+
+        //glide
+        glide_version = '4.10.0'
+
+        //swipe to refresh
+        swiperefresh_version= "1.0.0"
+
+        //lottie
+        lottie_version = "3.4.0"
+
+        //faker
+        faker_version = "1.0.2"
+
+        //Assisted inject
+        assisted_inject_version = "0.5.2"
+
+        //Mock Web server
+        mock_web_server_version = "4.7.2"
+
+        //core_testing
+        core_testing_version = "2.1.0"
+
+        truth_version = "1.0.1"
+    }
+
+
+
+
     repositories {
         google()
         jcenter()
         
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
+        classpath 'com.android.tools.build:gradle:3.6.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
