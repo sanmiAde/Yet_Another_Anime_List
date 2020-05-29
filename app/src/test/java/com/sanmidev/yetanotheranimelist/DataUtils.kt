@@ -2,6 +2,7 @@ package com.sanmidev.yetanotheranimelist
 
 import com.github.javafaker.Faker
 import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListErrorRespones
 import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.AnimeResponse
 
@@ -66,5 +67,9 @@ object DataUtils {
 
             ), animeLists.first, animeLists.second
         )
+    }
+
+    fun getAnimeListErrorResponse() : AnimeListErrorRespones{
+       return AnimeListErrorRespones("Resource does not exist", "Something Happened", 404, "BadResponseException")
     }
 }
