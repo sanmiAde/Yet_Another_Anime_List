@@ -19,14 +19,20 @@ class UpComingAnimesViewModel(
     private val application: Application
 ) : ViewModel() {
 
-    private val getUpComingAnimesMutableLiveData = MutableLiveData<AnimeListResult>()
-
+    private var  getUpComingAnimesMutableLiveData  :MutableLiveData<AnimeListResult> =
+        MutableLiveData<AnimeListResult>()
     private var currentPage = 1
+
 
     private val compositeDisposable = CompositeDisposable()
 
     val upComingLiveData: LiveData<AnimeListResult>
         get() = getUpComingAnimesMutableLiveData
+
+    init {
+        getUpComingAnimes()
+    }
+
 
     class VMFactory @Inject constructor(
         private val jikanRepository: JikanRepository,
@@ -44,7 +50,7 @@ class UpComingAnimesViewModel(
         getUpComingAnimesMutableLiveData.value = AnimeListResult.loading()
 
         compositeDisposable.add(
-            jikanRepository.getUpComingAnimeList(1)
+            jikanRepository.getUpComingAnimeList(currentPage)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
                 .subscribeBy(

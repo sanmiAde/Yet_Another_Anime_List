@@ -6,12 +6,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 @ApplicationScope
-class AppScheduler @Inject constructor()  : RxScheduler{
+class AppScheduler @Inject constructor() : RxScheduler{
     override fun io() = Schedulers.io()
     override fun main(): Scheduler = AndroidSchedulers.mainThread()
 }
 
-class  TestAppScheduler() : RxScheduler{
+class  TestAppScheduler @Inject constructor(): RxScheduler{
 
     override fun io(): Scheduler = Schedulers.trampoline()
 

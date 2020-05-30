@@ -71,6 +71,7 @@ class NetworkModule {
         return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .build()
     }
@@ -80,8 +81,5 @@ class NetworkModule {
     fun providesJikanRetrofit( retrofit: Retrofit) : JikanService {
         return retrofit.create(JikanService::class.java)
     }
-
-
-
 
 }

@@ -1,10 +1,7 @@
 package com.sanmidev.yetanotheranimelist.di.component
 
-import android.app.Application
-import com.sanmidev.yetanotheranimelist.MainActivity
 import com.sanmidev.yetanotheranimelist.di.scope.ActivityScope
-import dagger.BindsInstance
-import dagger.Component
+import com.sanmidev.yetanotheranimelist.presentation.upComingAnimes.UpComingAnimesFragment
 import dagger.Subcomponent
 
 @ActivityScope
@@ -16,5 +13,5 @@ interface ActivityComponent{
     }
 
 
-    fun inject(mainActivity: MainActivity)
+    fun inject(mainActivity: UpComingAnimesFragment)
 }

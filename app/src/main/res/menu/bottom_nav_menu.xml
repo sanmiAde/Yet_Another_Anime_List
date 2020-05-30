@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/upComingAnimesFragment"
+        android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+        android:title="upcoming" />
+    <item
+        android:id="@+id/trendingFragment"
+        android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+        android:title="Trending" />
+    <item
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="Favourite" />
+    <item
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="Profile" />
+</menu>

@@ -60,11 +60,11 @@ class UpComingAnimesViewModelTest {
         generatedData = DataUtils.generateAnimeListResponse(faker)
         jikanService = retrofit.create(JikanService::class.java)
         jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper, moshi)
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+
     }
 
     @Test
-    fun getUpComingAnimes_shouldReturnAnimeResultSuccess_whenRequestIsSuccesfull() {
+    fun getUpComingAnimes_shouldReturnAnimeResultSuccess_whenInitialised() {
             //GIVEN
         mockWebServer.enqueue(
             MockResponse()
@@ -73,7 +73,7 @@ class UpComingAnimesViewModelTest {
         )
 
         //WHEN
-        SUT.getUpComingAnimes()
+        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
         SUT.upComingLiveData.observeForever(observer)
 
         //THEN
@@ -82,7 +82,7 @@ class UpComingAnimesViewModelTest {
 
 
     @Test
-    fun getUpComingAnimes_shouldReturnAnimeResultAPIError_whenResourceCantBeFound() {
+    fun getUpComingAnimes_shouldReturnAnimeResultAPIError_whenInitialised() {
 
         //GIVEN
         mockWebServer.enqueue(
@@ -92,7 +92,7 @@ class UpComingAnimesViewModelTest {
         )
 
         //WHEN
-        SUT.getUpComingAnimes()
+        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
         SUT.upComingLiveData.observeForever(observer)
 
         //THEN

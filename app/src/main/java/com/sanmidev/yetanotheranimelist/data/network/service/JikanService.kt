@@ -9,6 +9,6 @@ import retrofit2.http.Path
 
 interface JikanService {
 
-    @GET("/top/anime/{page}/upcoming")
+    @GET("/v3/top/anime/{page}/upcoming")
     fun getUpandComingAnime(@Path("page") page : String) : Single<Response<ResponseBody>>
 }
