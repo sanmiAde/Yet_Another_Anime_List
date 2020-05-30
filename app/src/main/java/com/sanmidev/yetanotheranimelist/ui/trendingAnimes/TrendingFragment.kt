@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.presentation.trendingAnimes
+package com.sanmidev.yetanotheranimelist.ui.trendingAnimes
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle

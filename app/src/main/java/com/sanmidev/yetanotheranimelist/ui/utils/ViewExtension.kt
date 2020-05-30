@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.presentation.utils
+package com.sanmidev.yetanotheranimelist.ui.utils
 
 import android.view.View
 

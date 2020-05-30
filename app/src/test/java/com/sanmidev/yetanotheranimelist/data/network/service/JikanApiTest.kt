@@ -18,7 +18,6 @@ import retrofit2.Retrofit
 
 class JikanApiTest {
 
-
     @get:Rule
     val mockWebServer = MockWebServer()
 
@@ -50,7 +49,7 @@ class JikanApiTest {
         val request = mockWebServer.takeRequest()
 
         //THEN
-        Truth.assertThat("/top/anime/1/upcoming").isEqualTo(request.path)
+        Truth.assertThat("/v3/top/anime/1/upcoming").isEqualTo(request.path)
         Truth.assertThat("GET").isEqualTo(request.method)
         testObserver.assertNoErrors()
 

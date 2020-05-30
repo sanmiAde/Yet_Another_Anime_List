@@ -71,6 +71,9 @@ buildscript {
 
         //truth
         truth_version = "1.0.1"
+
+        //Decorator
+        decorator_version = "1.1.0"
     }
 
 

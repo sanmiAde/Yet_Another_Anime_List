@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/upComingAnimesFragment"
-        android:name="com.sanmidev.yetanotheranimelist.presentation.upComingAnimes.UpComingAnimesFragment"
+        android:name="com.sanmidev.yetanotheranimelist.ui.upComingAnimes.UpComingAnimesFragment"
         android:label="fragment_up_coming_animes"
         tools:layout="@layout/fragment_up_coming_animes" />
     <fragment
         android:id="@+id/trendingFragment"
-        android:name="com.sanmidev.yetanotheranimelist.presentation.trendingAnimes.TrendingFragment"
+        android:name="com.sanmidev.yetanotheranimelist.ui.trendingAnimes.TrendingFragment"
         android:label="TrendingFragment" />
 </navigation>

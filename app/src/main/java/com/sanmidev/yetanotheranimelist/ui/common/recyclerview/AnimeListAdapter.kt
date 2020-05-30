@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.presentation.common.recyclerview
+package com.sanmidev.yetanotheranimelist.ui.common.recyclerview
 
 
 import android.content.Context
@@ -13,7 +13,7 @@ import com.sanmidev.yetanotheranimelist.di.module.GlideApp
 
 class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeListAdapter.AnimeListViewHolder>(AnimeListDiffCallback()) {
 
-    private lateinit var onAnimeImageClickListener :  ( AnimeEntity) -> Unit
+    private lateinit var onAnimeImageClickListener :  (AnimeEntity) -> Unit
 
     inner  class AnimeListViewHolder(val binding : AnimeListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 

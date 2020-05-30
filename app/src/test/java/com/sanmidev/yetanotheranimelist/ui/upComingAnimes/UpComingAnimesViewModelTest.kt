@@ -1,10 +1,13 @@
-package com.sanmidev.yetanotheranimelist.presentation.upComingAnimes
+package com.sanmidev.yetanotheranimelist.ui.upComingAnimes
 
 import android.app.Application
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.github.javafaker.Faker
+import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
 import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
@@ -15,14 +18,17 @@ import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
 import com.squareup.moshi.Moshi
+import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
@@ -45,6 +51,7 @@ class UpComingAnimesViewModelTest {
     private lateinit var SUT: UpComingAnimesViewModel
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
+    private  lateinit var dispatcher : Dispatcher
 
 
     @Mock
@@ -52,6 +59,9 @@ class UpComingAnimesViewModelTest {
 
     @Mock
     lateinit var application: Application
+
+    @Mock
+    lateinit var applicationContext : Context
 
     @Before
     fun setUp() {
@@ -61,16 +71,32 @@ class UpComingAnimesViewModelTest {
         jikanService = retrofit.create(JikanService::class.java)
         jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper, moshi)
 
+
+       dispatcher = object : Dispatcher(){
+
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return when {
+                    request.path?.contains("/v3/top/anime/1/upcoming")!! -> {
+                        MockResponse().setBody(AnimeListResponseJsonAdapter(NetworkTestUtils.moshi).toJson(generatedData.first))
+                            .setResponseCode(HttpURLConnection.HTTP_OK)
+
+                    }
+                    request.path?.contains("/v3/top/anime/2/upcoming")!! -> {
+                        MockResponse().setBody(AnimeListResponseJsonAdapter(NetworkTestUtils.moshi).toJson(generatedData.first))
+                            .setResponseCode(HttpURLConnection.HTTP_OK)
+                    }
+
+                    else -> MockResponse().setResponseCode(404)
+                }
+            }
+        }
+
     }
 
     @Test
     fun getUpComingAnimes_shouldReturnAnimeResultSuccess_whenInitialised() {
             //GIVEN
-        mockWebServer.enqueue(
-            MockResponse()
-                .setBody(AnimeListResponseJsonAdapter(moshi).toJson(generatedData.first))
-                .setResponseCode(HttpURLConnection.HTTP_OK)
-        )
+        mockWebServer.dispatcher =  dispatcher
 
         //WHEN
         SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
@@ -95,10 +121,60 @@ class UpComingAnimesViewModelTest {
         SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
         SUT.upComingLiveData.observeForever(observer)
 
+
+
         //THEN
         verify(observer).onChanged(any(AnimeListResult.APIerror::class.java))
     }
 
+
+    @Test
+    fun getNextUpComingAnimes_currentPageShouldBe2_WhenRequestIsSuccessful(){
+        //GIVEN
+        mockWebServer.dispatcher = dispatcher
+
+
+        //WHEN
+        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT.getNextUpComingAnimes()
+        SUT.upComingLiveData.observeForever(observer)
+        SUT.nextUpComingLiveData.observeForever(observer)
+
+        //THEN
+        Truth.assertThat(SUT.currentPage).isEqualTo(2)
+
+    }
+
+
+    @Test
+    fun getNextUpComingAnimes_currentPageShouldBe1_whenRequestIsNotSuccessful(){
+        //GIVEN
+       // mockWebServer.dispatcher = dispatcher
+
+
+        //WHEN
+        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT.getNextUpComingAnimes()
+        SUT.upComingLiveData.observeForever(observer)
+
+        //THEN
+        Truth.assertThat(SUT.currentPage).isEqualTo(1)
+    }
+
+    @Test
+    fun getNextUpComingAnimes_shouldReturnNextListOfUpComingAnimes_WhenRequestIsSuccessful(){
+        //GIVEN
+       mockWebServer.dispatcher = dispatcher
+        //WHEN
+        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT.getNextUpComingAnimes()
+        SUT.nextUpComingLiveData.observeForever(observer)
+
+
+        //THEN
+        verify(observer).onChanged(any(AnimeListResult.success::class.java))
+
+    }
 
 
 
