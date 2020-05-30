@@ -24,16 +24,37 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", '"https://api.jikan.moe/"'
         }
         QA {
             applicationIdSuffix = '.QA'
             versionNameSuffix = '.QA'
             debuggable = true
+            buildConfigField "String", "BASE_URL", '"https://api.jikan.moe/"'
         }
         debug {
             applicationIdSuffix = '.debug'
             versionNameSuffix = '.debug'
+            buildConfigField "String", "BASE_URL", '"https://api.jikan.moe/"'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    dataBinding {
+        enabled = true
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
 
@@ -66,12 +87,14 @@ dependencies {
     // Test helpers for LiveData
     implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
     implementation 'com.google.firebase:firebase-analytics:17.4.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     testImplementation "androidx.arch.core:core-testing:$arch_version"
 
     // navigation components
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
 
     //room
     implementation "androidx.room:room-runtime:$room_version"
@@ -80,10 +103,8 @@ dependencies {
     // RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
 
-
     // Test helpers room
     testImplementation "androidx.room:room-testing:$room_version"
-
 
     //Dagger
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -104,21 +125,27 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rx_java_adapter_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$retrofit_interceptor_version"
 
+    //Moshi
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     //Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
-
 
     //rxjava
     implementation "io.reactivex.rxjava2:rxjava:$rx_java2_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
     implementation "io.reactivex.rxjava2:rxkotlin:$rx_kotlin2_version"
 
+    //Decorator
+    implementation "io.cabriole:decorator:$decorator_version"
+
     //test
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$expresso_core_version"
 
+    //core-test
     testImplementation "androidx.arch.core:core-testing:$core_testing_version"
     androidTestImplementation "androidx.arch.core:core-testing:$core_testing_version"
 
