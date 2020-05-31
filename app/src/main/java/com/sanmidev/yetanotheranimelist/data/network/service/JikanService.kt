@@ -11,4 +11,7 @@ interface JikanService {
 
     @GET("/v3/top/anime/{page}/upcoming")
     fun getUpandComingAnime(@Path("page") page : String) : Single<Response<ResponseBody>>
+
+    @GET("/v3/top/anime/{page}/airing")
+    fun getAiringAnimes(@Path("page") page: String): Single<Response<ResponseBody>>
 }

@@ -39,11 +39,8 @@ class JikanApiTest {
     @Test
     fun getUpcomingAnimeList_Calls_The_Correct_API_Successfully() {
         //GIVEN
-        mockWebServer.enqueue(
-            MockResponse()
-                .setBody(AnimeListResponseJsonAdapter(moshi).toJson(generatedData.first))
-                .setResponseCode(200)
-        )
+        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
+
         //WHEN
         val testObserver = SUT.getUpandComingAnime("1").test()
         val request = mockWebServer.takeRequest()
@@ -53,6 +50,22 @@ class JikanApiTest {
         Truth.assertThat("GET").isEqualTo(request.method)
         testObserver.assertNoErrors()
 
+    }
+
+
+    @Test
+    fun getAiringAnimeList_Calls_The_Correct_API_Successfully(){
+        //GIVEN
+        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
+
+        //WHEN
+        val testObserver = SUT.getAiringAnimes("1").test()
+        val request = mockWebServer.takeRequest()
+
+        //THEN
+        Truth.assertThat("/v3/top/anime/1/airing").isEqualTo(request.path)
+        Truth.assertThat("GET").isEqualTo(request.method)
+        testObserver.assertNoErrors()
     }
 
 

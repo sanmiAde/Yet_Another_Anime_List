@@ -20,6 +20,7 @@ class AnimeListMapper @Inject constructor() {
     fun transformAnimeListToEntity(animeListResponse: AnimeListResponse) : AnimeEntityList {
         val animeEntities = mutableListOf<AnimeEntity>()
          animeListResponse.animeResponses.map { animeResponse: AnimeResponse ->
+
            animeEntities.add(AnimeEntity( animeResponse.endDate ?: "", animeResponse.episodes ?: 0, animeResponse.imageUrl, animeResponse.malId, animeResponse.score, animeResponse.startDate ?: "", animeResponse.title, animeResponse.type, animeResponse.url))
         }
 

@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.upComingAnimes
+package com.sanmidev.yetanotheranimelist.ui.airingAnimes
 
 import android.app.Application
 import android.content.Context
@@ -7,12 +7,14 @@ import androidx.lifecycle.Observer
 import com.github.javafaker.Faker
 import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
 import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
-import com.sanmidev.yetanotheranimelist.data.network.model.*
+import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
+import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponseJsonAdapter
+import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.network.model.AnimeResponse
 import com.sanmidev.yetanotheranimelist.data.network.repo.FakeSaas
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
@@ -24,20 +26,18 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
 import java.net.HttpURLConnection
 
 @RunWith(MockitoJUnitRunner::class)
-class UpComingAnimesViewModelTest {
+class AiringViewModelTest {
 
     @get:Rule
     val mockWebServer = MockWebServer()
@@ -50,10 +50,11 @@ class UpComingAnimesViewModelTest {
     private lateinit var moshi: Moshi
     private lateinit var jikanService: JikanService
     private lateinit var jikanRepository: JikanRepository
-    private lateinit var SUT: UpComingAnimesViewModel
+    private lateinit var SUT: AiringViewModel
+    private lateinit var dispatcher: Dispatcher
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
-    private  lateinit var dispatcher : Dispatcher
+    private val testAppScheduler = TestAppScheduler()
     private val fakeSaas = FakeSaas()
 
     @Mock
@@ -63,12 +64,11 @@ class UpComingAnimesViewModelTest {
     lateinit var application: Application
 
     @Mock
-    lateinit var applicationContext : Context
-
+    lateinit var applicationContext: Context
 
 
     @Before
-    fun setUp() {
+    fun setup() {
         retrofit = NetworkTestUtils.provideRetrofit(mockWebServer)
         moshi = NetworkTestUtils.moshi
         generatedData = DataUtils.generateAnimeListResponse(faker)
@@ -76,17 +76,25 @@ class UpComingAnimesViewModelTest {
         jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper, moshi, fakeSaas)
 
 
-       dispatcher = object : Dispatcher(){
+        dispatcher = object : Dispatcher() {
 
             override fun dispatch(request: RecordedRequest): MockResponse {
                 return when {
-                    request.path?.contains("/v3/top/anime/1/upcoming")!! -> {
-                        MockResponse().setBody(AnimeListResponseJsonAdapter(NetworkTestUtils.moshi).toJson(generatedData.first))
+                    request.path?.contains("/v3/top/anime/1/airing")!! -> {
+                        MockResponse().setBody(
+                            AnimeListResponseJsonAdapter(NetworkTestUtils.moshi).toJson(
+                                generatedData.first
+                            )
+                        )
                             .setResponseCode(HttpURLConnection.HTTP_OK)
 
                     }
-                    request.path?.contains("/v3/top/anime/2/upcoming")!! -> {
-                        MockResponse().setBody(AnimeListResponseJsonAdapter(NetworkTestUtils.moshi).toJson(generatedData.first))
+                    request.path?.contains("/v3/top/anime/2/airing")!! -> {
+                        MockResponse().setBody(
+                            AnimeListResponseJsonAdapter(NetworkTestUtils.moshi).toJson(
+                                generatedData.first
+                            )
+                        )
                             .setResponseCode(HttpURLConnection.HTTP_OK)
                     }
 
@@ -94,17 +102,16 @@ class UpComingAnimesViewModelTest {
                 }
             }
         }
-
     }
 
     @Test
-    fun getUpComingAnimes_shouldReturnAnimeResultSuccess_whenInitialised() {
-            //GIVEN
-        mockWebServer.dispatcher =  dispatcher
+    fun getAiringAnimes_shouldReturnAnimeResultSuccess_whenInitialised() {
+        //GIVEN
+        mockWebServer.dispatcher = dispatcher
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
-        SUT.upComingLiveData.observeForever(observer)
+        SUT = AiringViewModel(jikanRepository, testAppScheduler)
+        SUT.airingLiveData.observeForever(observer)
 
         //THEN
         verify(observer).onChanged(any(AnimeListResult.success::class.java))
@@ -112,37 +119,30 @@ class UpComingAnimesViewModelTest {
 
 
     @Test
-    fun getUpComingAnimes_shouldReturnAnimeResultAPIError_whenInitialised() {
-
+    fun getNextAiringAnimes_shouldReturnAnimeResultSuccess_whenRequestIsSuccesful() {
         //GIVEN
-        mockWebServer.enqueue(
-            MockResponse()
-                .setBody(AnimeListErrorResponesJsonAdapter(moshi).toJson(DataUtils.getAnimeListErrorResponse()))
-                .setResponseCode(HttpURLConnection.HTTP_NOT_FOUND)
-        )
+        mockWebServer.dispatcher = dispatcher
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
-        SUT.upComingLiveData.observeForever(observer)
-
+        SUT = AiringViewModel(jikanRepository, testAppScheduler)
+        SUT.getNextAiringAnime()
+        SUT.nextAiringLiveData.observeForever(observer)
 
 
         //THEN
-        verify(observer).onChanged(any(AnimeListResult.APIerror::class.java))
+        verify(observer).onChanged(any(AnimeListResult.success::class.java))
     }
 
 
     @Test
-    fun getNextUpComingAnimes_currentPageShouldBe2_WhenRequestIsSuccessful(){
+    fun getNextAiringAnimes_currentPageShouldEquals2_whenRequestIsSuccessful(){
         //GIVEN
         mockWebServer.dispatcher = dispatcher
 
-
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
-        SUT.getNextUpComingAnimes()
-        SUT.upComingLiveData.observeForever(observer)
-        SUT.nextUpComingLiveData.observeForever(observer)
+        SUT = AiringViewModel(jikanRepository, testAppScheduler)
+        SUT.getNextAiringAnime()
+        SUT.nextAiringLiveData.observeForever(observer)
 
         //THEN
         Truth.assertThat(SUT.currentPage).isEqualTo(2)
@@ -151,38 +151,14 @@ class UpComingAnimesViewModelTest {
 
 
     @Test
-    fun getNextUpComingAnimes_currentPageShouldBe1_whenRequestIsNotSuccessful(){
-        //GIVEN
-       // mockWebServer.dispatcher = dispatcher
-
+    fun getNextAiringAnimes_currentPageShouldEquals1_whenErrorOccurs(){
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
-        SUT.getNextUpComingAnimes()
-        SUT.upComingLiveData.observeForever(observer)
+        SUT = AiringViewModel(jikanRepository, testAppScheduler)
+        SUT.getNextAiringAnime()
+        SUT.nextAiringLiveData.observeForever(observer)
 
         //THEN
         Truth.assertThat(SUT.currentPage).isEqualTo(1)
-    }
-
-    @Test
-    fun getNextUpComingAnimes_shouldReturnNextListOfUpComingAnimes_WhenRequestIsSuccessful(){
-        //GIVEN
-       mockWebServer.dispatcher = dispatcher
-        //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
-        SUT.getNextUpComingAnimes()
-        SUT.nextUpComingLiveData.observeForever(observer)
-
-
-        //THEN
-        verify(observer).onChanged(any(AnimeListResult.success::class.java))
-
-    }
-
-
-
-    @After
-    fun tearDown() {
     }
 }
