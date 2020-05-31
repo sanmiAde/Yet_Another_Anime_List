@@ -64,16 +64,19 @@ class UpComingAnimesViewModel(
         getUpComingAnimesMutableLiveData.value = AnimeListResult.loading()
 
         compositeDisposable.add(
+
             jikanRepository.getUpComingAnimeList(_currentPage)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
                 .subscribeBy(
                     onError = { throwable: Throwable ->
+
                         error = throwable.localizedMessage
                         getUpComingAnimesMutableLiveData.value =
                             AnimeListResult.Exception("Could Not Connect To Server", throwable)
                     },
                     onSuccess = { animeListResult: AnimeListResult ->
+
                         getUpComingAnimesMutableLiveData.value = animeListResult
                     }
                 )
@@ -103,6 +106,8 @@ class UpComingAnimesViewModel(
                     },
                     onSuccess = { animeListResult: AnimeListResult ->
                         getNextUpComingAnimesMutableLiveData.value = animeListResult
+
+
                     }
                 )
         )
@@ -115,7 +120,7 @@ class UpComingAnimesViewModel(
 
 
     override fun onCleared() {
-        compositeDisposable.dispose()
+     cancelSubscriptions()
         super.onCleared()
     }
 

@@ -12,6 +12,6 @@
         tools:layout="@layout/fragment_up_coming_animes" />
     <fragment
         android:id="@+id/trendingFragment"
-        android:name="com.sanmidev.yetanotheranimelist.ui.trendingAnimes.TrendingFragment"
+        android:name="com.sanmidev.yetanotheranimelist.ui.airingAnimes.AiringFragment"
         android:label="TrendingFragment" />
 </navigation>
