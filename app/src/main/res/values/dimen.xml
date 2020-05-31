@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="anime_image_height">250dp</dimen>
-    <dimen name="anime_image_width">155dp</dimen>
+    <dimen name="anime_image_width">160dp</dimen>
     <dimen name="offset_size">8dp</dimen>
 </resources>
