@@ -2,6 +2,7 @@ package com.sanmidev.yetanotheranimelist.di.component
 
 import android.app.Application
 import com.sanmidev.yetanotheranimelist.di.module.ApplicationModule
+import com.sanmidev.yetanotheranimelist.di.module.AssistedInjectModule
 import com.sanmidev.yetanotheranimelist.di.module.FirebaseModule
 import com.sanmidev.yetanotheranimelist.di.module.NetworkModule
 import com.sanmidev.yetanotheranimelist.di.scope.ApplicationScope
@@ -9,7 +10,7 @@ import dagger.BindsInstance
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [ApplicationModule::class, NetworkModule::class, FirebaseModule::class])
+@Component(modules = [ApplicationModule::class, NetworkModule::class, FirebaseModule::class, AssistedInjectModule::class])
 interface AppComponent {
 
     @Component.Factory

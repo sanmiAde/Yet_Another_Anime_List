@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.upComingAnimes
+package com.sanmidev.yetanotheranimelist.feature.upComingAnimes
 
 import android.app.Application
 import androidx.lifecycle.LiveData

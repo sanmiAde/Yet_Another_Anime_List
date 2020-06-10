@@ -1,25 +1,28 @@
-package com.sanmidev.yetanotheranimelist.ui.airingAnimes
+package com.sanmidev.yetanotheranimelist.feature.upComingAnimes
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sanmidev.yetanotheranimelist.MainActivity
 import com.sanmidev.yetanotheranimelist.R
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
-import com.sanmidev.yetanotheranimelist.databinding.FragmentAiringBinding
-import com.sanmidev.yetanotheranimelist.ui.common.recyclerview.AnimeListAdapter
-import com.sanmidev.yetanotheranimelist.ui.utils.gone
-import com.sanmidev.yetanotheranimelist.ui.utils.visible
+import com.sanmidev.yetanotheranimelist.databinding.FragmentUpComingAnimesBinding
+import com.sanmidev.yetanotheranimelist.feature.airingAnimes.AiringFragmentDirections
+import com.sanmidev.yetanotheranimelist.feature.common.recyclerview.AnimeListAdapter
+import com.sanmidev.yetanotheranimelist.feature.utils.gone
+import com.sanmidev.yetanotheranimelist.feature.utils.navigateSafely
+import com.sanmidev.yetanotheranimelist.feature.utils.visible
 import com.sanmidev.yetanotheranimelist.utils.EndlessRecyclerViewScrollListener
 import io.cabriole.decorator.ColumnProvider
 import io.cabriole.decorator.GridMarginDecoration
@@ -27,35 +30,37 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class AiringFragment : Fragment() {
+/**
+ * A simple [Fragment] subclass.
+ */
+//TODO create a base fragment and viewmodel for both upcoming and airing fragment
+class UpComingAnimesFragment : Fragment() {
 
     private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
 
-
+    private var _animeUpComingAnimesBinding: FragmentUpComingAnimesBinding? = null
 
     private var animeListAdaper: AnimeListAdapter? = null
 
+    private val animeUpComingAnimesBinding: FragmentUpComingAnimesBinding
+        get() = _animeUpComingAnimesBinding!!
+
     @Inject
-    lateinit var viewModelFactory: AiringViewModel.VMFactory
-
-    private var  fragmentAiringBinding : FragmentAiringBinding? = null
-
-
-
-    val binding : FragmentAiringBinding
-        get() = fragmentAiringBinding!!
-
+    lateinit var vmFactory: UpComingAnimesViewModel.VMFactory
 
     private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(AiringViewModel::class.java)
+        ViewModelProvider(this, vmFactory)[UpComingAnimesViewModel::class.java]
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       fragmentAiringBinding = FragmentAiringBinding.inflate(inflater)
-        return binding.root
+        // Inflate the layout for this fragment
+        _animeUpComingAnimesBinding = FragmentUpComingAnimesBinding.inflate(layoutInflater)
+        return animeUpComingAnimesBinding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,9 +76,8 @@ class AiringFragment : Fragment() {
         (activity as MainActivity).activityComponent.inject(this)
     }
 
-
     private fun initRecyclerView() {
-
+        //TODO add auto grid
 
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
 
@@ -82,12 +86,15 @@ class AiringFragment : Fragment() {
         //init adapter
         animeListAdaper = AnimeListAdapter(this.requireContext())
         val animePictureClickListener: (AnimeEntity) -> Unit = { animeEntity: AnimeEntity ->
-            Timber.d(animeEntity.toString())
+
+            val directions = AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id)
+
+            findNavController().navigateSafely(directions, R.id.upComingAnimesFragment)
         }
         animeListAdaper?.setAnimeImageClickListener(animePictureClickListener)
 
         //init recyclerview
-        binding.rvAiring.apply {
+        animeUpComingAnimesBinding.upComingAnimeList.apply {
             this.setHasFixedSize(true)
             this.adapter = animeListAdaper
             this.layoutManager = gridLayoutManager
@@ -108,12 +115,12 @@ class AiringFragment : Fragment() {
             this.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        binding.rvAiring.viewTreeObserver.removeOnGlobalLayoutListener(
+                        animeUpComingAnimesBinding.upComingAnimeList.viewTreeObserver.removeOnGlobalLayoutListener(
                             this
                         )
 
                         val viewWidth: Int =
-                            binding.rvAiring.measuredWidth
+                            animeUpComingAnimesBinding.upComingAnimeList.measuredWidth
                         val cardViewWidth =
                             requireContext().resources.getDimensionPixelSize(R.dimen.anime_image_width)
                                 .toInt()
@@ -135,22 +142,24 @@ class AiringFragment : Fragment() {
     }
 
     private fun observerGetUpComingAnimeNetworkState() {
-        viewModel.airingLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
+        viewModel.upComingLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
             when (animeListResult) {
                 is AnimeListResult.Loading -> {
 
-                    binding.pbAiring.visible()
+                    animeUpComingAnimesBinding.progressBar.visible()
 
                 }
                 is AnimeListResult.Success -> {
 
                     val animeList = animeListResult.data.animeEnities.toMutableList()
                     animeListAdaper?.submitList(animeList)
-                    binding.pbAiring.gone()
+                    animeUpComingAnimesBinding.upComingAnimeList.visible()
+                    animeUpComingAnimesBinding.progressBar.gone()
+
                 }
 
                 is AnimeListResult.APIerror -> {
-                    binding.pbAiring.gone()
+                    animeUpComingAnimesBinding.progressBar.gone()
 
                     val apiError = animeListResult.jikanErrorRespone
                     Timber.d(apiError.toString())
@@ -159,23 +168,23 @@ class AiringFragment : Fragment() {
 
                     Toast.makeText(requireContext(), animeListResult.message, Toast.LENGTH_SHORT)
                         .show()
-                    binding.pbAiring.gone()
+                    animeUpComingAnimesBinding.progressBar.gone()
                 }
             }
         })
     }
 
     private fun observeNextAnimeList() {
-        viewModel.nextAiringLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
+        viewModel.nextUpComingLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
             when (animeListResult) {
                 is AnimeListResult.Loading -> {
 
-                    binding.pbAiring.visible()
+                    animeUpComingAnimesBinding.progressBar.visible()
 
                 }
                 is AnimeListResult.Success -> {
 
-                    binding.pbAiring.gone()
+                    animeUpComingAnimesBinding.progressBar.gone()
 
                     val animeList = animeListResult.data.animeEnities.toMutableList()
                     val existingAnimeList = animeListAdaper?.currentList?.toMutableList()
@@ -185,7 +194,7 @@ class AiringFragment : Fragment() {
                 }
 
                 is AnimeListResult.APIerror -> {
-                    binding.pbAiring.gone()
+                    animeUpComingAnimesBinding.progressBar.gone()
 
                     val apiError = animeListResult.jikanErrorRespone
                     if (apiError.message != getString(R.string.res_does_not_exist)) {
@@ -196,7 +205,7 @@ class AiringFragment : Fragment() {
 
                     Toast.makeText(requireContext(), animeListResult.message, Toast.LENGTH_SHORT)
                         .show()
-                    binding.pbAiring.gone()
+                    animeUpComingAnimesBinding.progressBar.gone()
                 }
             }
         })
@@ -207,7 +216,7 @@ class AiringFragment : Fragment() {
         endlessRecyclerViewScrollListener =
             object : EndlessRecyclerViewScrollListener(gridLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                    viewModel.getNextAiringAnime()
+                    viewModel.getNextUpComingAnimes()
                 }
 
             }
@@ -217,4 +226,6 @@ class AiringFragment : Fragment() {
         animeListAdaper = null
         super.onDestroyView()
     }
+
+
 }

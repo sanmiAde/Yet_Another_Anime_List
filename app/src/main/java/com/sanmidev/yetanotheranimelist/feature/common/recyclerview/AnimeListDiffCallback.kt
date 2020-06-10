@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.common.recyclerview
+package com.sanmidev.yetanotheranimelist.feature.common.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity

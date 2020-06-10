@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.upComingAnimes
+package com.sanmidev.yetanotheranimelist.feature.upComingAnimes
 
 import android.app.Application
 import android.content.Context
@@ -12,7 +12,6 @@ import com.sanmidev.yetanotheranimelist.NetworkTestUtils
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
-import com.sanmidev.yetanotheranimelist.data.network.model.*
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.*
 import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorResponeJsonAdapter
 import com.sanmidev.yetanotheranimelist.data.network.repo.FakeSaas

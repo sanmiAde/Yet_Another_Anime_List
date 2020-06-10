@@ -7,11 +7,37 @@
 
     <fragment
         android:id="@+id/upComingAnimesFragment"
-        android:name="com.sanmidev.yetanotheranimelist.ui.upComingAnimes.UpComingAnimesFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.upComingAnimes.UpComingAnimesFragment"
         android:label="fragment_up_coming_animes"
-        tools:layout="@layout/fragment_up_coming_animes" />
+        tools:layout="@layout/fragment_up_coming_animes" >
+        <action
+            android:id="@+id/action_upComingAnimesFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/trendingFragment"
-        android:name="com.sanmidev.yetanotheranimelist.ui.airingAnimes.AiringFragment"
-        android:label="TrendingFragment" />
+        android:name="com.sanmidev.yetanotheranimelist.feature.airingAnimes.AiringFragment"
+        android:label="TrendingFragment" >
+        <action
+            android:id="@+id/action_trendingFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/animeDetailFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.animeDetail.AnimeDetailFragment"
+        android:label="anime_detail_fragment"
+        tools:layout="@layout/anime_detail_fragment" >
+        <argument
+            android:name="malId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

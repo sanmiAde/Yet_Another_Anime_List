@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.common.recyclerview
+package com.sanmidev.yetanotheranimelist.feature.common.recyclerview
 
 
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.airingAnimes
+package com.sanmidev.yetanotheranimelist.feature.airingAnimes
 
 import android.app.Application
 import android.content.Context

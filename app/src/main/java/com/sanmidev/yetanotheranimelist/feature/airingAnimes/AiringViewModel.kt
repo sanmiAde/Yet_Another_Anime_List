@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.ui.airingAnimes
+package com.sanmidev.yetanotheranimelist.feature.airingAnimes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
