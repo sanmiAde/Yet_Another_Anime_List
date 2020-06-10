@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sanmidev.yetanotheranimelist">
 
+  <uses-permission-sdk-23 android:name="REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"></uses-permission-sdk-23>
     <application
         android:name="com.sanmidev.YetAnotherAnimeListApplication"
         android:allowBackup="true"

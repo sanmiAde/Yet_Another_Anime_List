@@ -9,16 +9,17 @@ import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.verify
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
-import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponseJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResult
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeResponse
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponseJsonAdapter
+
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
 import com.sanmidev.yetanotheranimelist.data.network.repo.FakeSaas
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
-import com.sanmidev.yetanotheranimelist.data.network.repo.Saas
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
 import com.squareup.moshi.Moshi
@@ -54,6 +55,7 @@ class AiringViewModelTest {
     private lateinit var dispatcher: Dispatcher
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
+    private val animeDetailMapper = AnimeDetailMapper()
     private val testAppScheduler = TestAppScheduler()
     private val fakeSaas = FakeSaas()
 
@@ -73,7 +75,7 @@ class AiringViewModelTest {
         moshi = NetworkTestUtils.moshi
         generatedData = DataUtils.generateAnimeListResponse(faker)
         jikanService = retrofit.create(JikanService::class.java)
-        jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper, moshi, fakeSaas)
+        jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper,animeDetailMapper, moshi, fakeSaas)
 
 
         dispatcher = object : Dispatcher() {
@@ -114,7 +116,7 @@ class AiringViewModelTest {
         SUT.airingLiveData.observeForever(observer)
 
         //THEN
-        verify(observer).onChanged(any(AnimeListResult.success::class.java))
+        verify(observer).onChanged(any(AnimeListResult.Success::class.java))
     }
 
 
@@ -130,7 +132,7 @@ class AiringViewModelTest {
 
 
         //THEN
-        verify(observer).onChanged(any(AnimeListResult.success::class.java))
+        verify(observer).onChanged(any(AnimeListResult.Success::class.java))
     }
 
 

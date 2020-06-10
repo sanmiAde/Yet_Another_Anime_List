@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.data.local.model
+package com.sanmidev.yetanotheranimelist.data.local.model.animelist
 
 data class AnimeEntity(
     val endDate: String,

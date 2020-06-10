@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
 import io.reactivex.disposables.CompositeDisposable
@@ -48,7 +48,7 @@ class AiringViewModel(
     }
 
     private fun getAiringAnimes() {
-        airingAnimeMutableLiveData.value = AnimeListResult.loading()
+        airingAnimeMutableLiveData.value = AnimeListResult.Loading
 
 
         compositeDisposable.add(
@@ -69,7 +69,7 @@ class AiringViewModel(
     fun getNextAiringAnime() {
         _currentPage += 1
 
-        nextAiringAnimeMutableLiveData.value = AnimeListResult.loading()
+        nextAiringAnimeMutableLiveData.value = AnimeListResult.Loading
 
         compositeDisposable.add(
             jikanRepository.getAiringAnimes(currentPage).subscribeOn(rxScheduler.io())

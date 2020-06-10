@@ -57,6 +57,16 @@ android {
         jvmTarget = '1.8'
     }
 
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 
 }
 
@@ -165,4 +175,9 @@ dependencies {
 
     //Truth
     testImplementation "com.google.truth:truth:$truth_version"
+
+
 }
+
+
+

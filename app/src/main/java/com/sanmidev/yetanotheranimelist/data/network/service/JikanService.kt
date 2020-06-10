@@ -1,6 +1,5 @@
 package com.sanmidev.yetanotheranimelist.data.network.service
 
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
 import io.reactivex.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -14,4 +13,9 @@ interface JikanService {
 
     @GET("/v3/top/anime/{page}/airing")
     fun getAiringAnimes(@Path("page") page: String): Single<Response<ResponseBody>>
+
+    @GET("/v3/anime/{mal_id}")
+    fun getDetailAnime(@Path("mal_id") malId: String):  Single<Response<ResponseBody>>
+
+
 }

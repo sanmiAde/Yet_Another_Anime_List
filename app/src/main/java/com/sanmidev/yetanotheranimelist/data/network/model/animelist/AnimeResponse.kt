@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.data.network.model
+package com.sanmidev.yetanotheranimelist.data.network.model.animelist
 
 
 import com.squareup.moshi.Json

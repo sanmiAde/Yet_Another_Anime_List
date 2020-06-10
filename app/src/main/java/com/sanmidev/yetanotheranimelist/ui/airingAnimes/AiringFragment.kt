@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sanmidev.yetanotheranimelist.MainActivity
 import com.sanmidev.yetanotheranimelist.R
-import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.databinding.FragmentAiringBinding
 import com.sanmidev.yetanotheranimelist.ui.common.recyclerview.AnimeListAdapter
 import com.sanmidev.yetanotheranimelist.ui.utils.gone
@@ -137,23 +137,22 @@ class AiringFragment : Fragment() {
     private fun observerGetUpComingAnimeNetworkState() {
         viewModel.airingLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
             when (animeListResult) {
-                is AnimeListResult.loading -> {
+                is AnimeListResult.Loading -> {
 
                     binding.pbAiring.visible()
 
                 }
-                is AnimeListResult.success -> {
-
-                    binding.pbAiring.gone()
+                is AnimeListResult.Success -> {
 
                     val animeList = animeListResult.data.animeEnities.toMutableList()
                     animeListAdaper?.submitList(animeList)
+                    binding.pbAiring.gone()
                 }
 
                 is AnimeListResult.APIerror -> {
                     binding.pbAiring.gone()
 
-                    val apiError = animeListResult.animeListErrorRespones
+                    val apiError = animeListResult.jikanErrorRespone
                     Timber.d(apiError.toString())
                 }
                 is AnimeListResult.Exception -> {
@@ -169,12 +168,12 @@ class AiringFragment : Fragment() {
     private fun observeNextAnimeList() {
         viewModel.nextAiringLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
             when (animeListResult) {
-                is AnimeListResult.loading -> {
+                is AnimeListResult.Loading -> {
 
                     binding.pbAiring.visible()
 
                 }
-                is AnimeListResult.success -> {
+                is AnimeListResult.Success -> {
 
                     binding.pbAiring.gone()
 
@@ -188,7 +187,7 @@ class AiringFragment : Fragment() {
                 is AnimeListResult.APIerror -> {
                     binding.pbAiring.gone()
 
-                    val apiError = animeListResult.animeListErrorRespones
+                    val apiError = animeListResult.jikanErrorRespone
                     if (apiError.message != getString(R.string.res_does_not_exist)) {
                         Timber.d(apiError.message)
                     }

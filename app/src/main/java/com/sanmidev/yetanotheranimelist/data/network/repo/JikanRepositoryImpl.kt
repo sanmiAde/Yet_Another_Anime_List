@@ -1,9 +1,14 @@
 package com.sanmidev.yetanotheranimelist.data.network.repo
 
+import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListErrorResponesJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponseJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponse
+import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponseJsonAdapter
+import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponseJsonAdapter
+
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorResponeJsonAdapter
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.squareup.moshi.Moshi
 import io.reactivex.Single
@@ -19,6 +24,7 @@ import javax.inject.Inject
 class JikanRepositoryImpl @Inject constructor(
     private val jikanService: JikanService,
     private val animeListMapper: AnimeListMapper,
+    private val animeDetailMapper: AnimeDetailMapper,
     private val moshi: Moshi,
     private val saas: Saas
 ) : JikanRepository {
@@ -36,15 +42,59 @@ class JikanRepositoryImpl @Inject constructor(
     }
 
     /***
-    * Gets gets currently airing animes from the jikan end point and maps to the respective entity depending on the status code returned.
-    * @param page is the current page on the  MAL website.
-    **
-    */
+     * Gets gets currently airing animes from the jikan end point and maps to the respective entity depending on the status code returned.
+     * @param page is the current page on the  MAL website.
+     **
+     */
     override fun getAiringAnimes(page: Int): Single<AnimeListResult> {
         return jikanService.getAiringAnimes(page.toString())
             .map { responseBody: Response<ResponseBody> ->
                 processAnimeListResponse(responseBody)
             }
+    }
+
+    /***
+     * Gets detail information about the currently selected anime and maps it to the respective entity depending on the status code returned.
+     * @param malId is the id of the selected anime resouce
+     */
+
+    override fun getAnimeDetail(malId: Int): Single<AnimeDetailResult> {
+        return jikanService.getDetailAnime(malId.toString()).map { responseBody ->
+            when (responseBody.code()) {
+                HttpURLConnection.HTTP_OK -> {
+
+                    try {
+                        val successResult = AnimeDetailResponseJsonAdapter(moshi).fromJson(
+                            requireNotNull(responseBody.body()?.string())
+                        )
+
+                        successResult?.let { animeDetailResponse: AnimeDetailResponse ->
+                            val animeDetailEntity =
+                                animeDetailMapper.tranformAnimeDetailToAnimeEntity(
+                                    animeDetailResponse
+                                )
+                            AnimeDetailResult.Success(animeDetailEntity)
+                        }
+                    } catch (ex: Exception) {
+                        saas.logException(ex)
+                        AnimeDetailResult.Exception("Error occured.", Throwable(ex))
+                    }
+                }
+                else -> {
+                    try {
+                        val errorResult = JikanErrorResponeJsonAdapter(moshi).fromJson(
+                            requireNotNull(responseBody.errorBody()).string()
+                        )
+                        errorResult?.let {
+                            AnimeDetailResult.APIerror(it)
+                        }
+                    } catch (ex: Exception) {
+                        saas.logException(ex)
+                        AnimeDetailResult.Exception("Error occured.", Throwable(ex))
+                    }
+                }
+            }
+        }
     }
 
     /***
@@ -64,7 +114,7 @@ class JikanRepositoryImpl @Inject constructor(
                         val animeEnities = animeListMapper.transformAnimeListToEntity(
                             animeListResponse
                         )
-                        AnimeListResult.success(animeEnities)
+                        AnimeListResult.Success(animeEnities)
                     }
                 } catch (ex: Exception) {
                     saas.logException(ex)
@@ -76,7 +126,7 @@ class JikanRepositoryImpl @Inject constructor(
 
             else -> {
                 try {
-                    val errorResult = AnimeListErrorResponesJsonAdapter(moshi).fromJson(
+                    val errorResult = JikanErrorResponeJsonAdapter(moshi).fromJson(
                         requireNotNull(responseBody.errorBody()).string()
                     )
                     errorResult?.let {

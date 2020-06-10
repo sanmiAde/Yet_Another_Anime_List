@@ -7,16 +7,17 @@ import androidx.lifecycle.Observer
 import com.github.javafaker.Faker
 import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
-import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
 import com.sanmidev.yetanotheranimelist.data.network.model.*
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.*
+import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorResponeJsonAdapter
 import com.sanmidev.yetanotheranimelist.data.network.repo.FakeSaas
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
-import com.sanmidev.yetanotheranimelist.data.network.repo.Saas
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
 import com.squareup.moshi.Moshi
@@ -30,7 +31,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
@@ -53,6 +53,7 @@ class UpComingAnimesViewModelTest {
     private lateinit var SUT: UpComingAnimesViewModel
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
+    private val animeDetailMapper = AnimeDetailMapper()
     private  lateinit var dispatcher : Dispatcher
     private val fakeSaas = FakeSaas()
 
@@ -73,7 +74,7 @@ class UpComingAnimesViewModelTest {
         moshi = NetworkTestUtils.moshi
         generatedData = DataUtils.generateAnimeListResponse(faker)
         jikanService = retrofit.create(JikanService::class.java)
-        jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper, moshi, fakeSaas)
+        jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper,animeDetailMapper, moshi, fakeSaas)
 
 
        dispatcher = object : Dispatcher(){
@@ -107,7 +108,7 @@ class UpComingAnimesViewModelTest {
         SUT.upComingLiveData.observeForever(observer)
 
         //THEN
-        verify(observer).onChanged(any(AnimeListResult.success::class.java))
+        verify(observer).onChanged(any(AnimeListResult.Success::class.java))
     }
 
 
@@ -117,7 +118,7 @@ class UpComingAnimesViewModelTest {
         //GIVEN
         mockWebServer.enqueue(
             MockResponse()
-                .setBody(AnimeListErrorResponesJsonAdapter(moshi).toJson(DataUtils.getAnimeListErrorResponse()))
+                .setBody(JikanErrorResponeJsonAdapter(moshi).toJson(DataUtils.getAnimeListErrorResponse()))
                 .setResponseCode(HttpURLConnection.HTTP_NOT_FOUND)
         )
 
@@ -176,7 +177,7 @@ class UpComingAnimesViewModelTest {
 
 
         //THEN
-        verify(observer).onChanged(any(AnimeListResult.success::class.java))
+        verify(observer).onChanged(any(AnimeListResult.Success::class.java))
 
     }
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResult
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
 import io.reactivex.disposables.CompositeDisposable
@@ -61,7 +61,7 @@ class UpComingAnimesViewModel(
 
     fun getUpComingAnimes() {
 
-        getUpComingAnimesMutableLiveData.value = AnimeListResult.loading()
+        getUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
 
         compositeDisposable.add(
 
@@ -87,7 +87,7 @@ class UpComingAnimesViewModel(
 
         _currentPage += 1
 
-        getNextUpComingAnimesMutableLiveData.value = AnimeListResult.loading()
+        getNextUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
 
         compositeDisposable.add(
             jikanRepository.getUpComingAnimeList(_currentPage)

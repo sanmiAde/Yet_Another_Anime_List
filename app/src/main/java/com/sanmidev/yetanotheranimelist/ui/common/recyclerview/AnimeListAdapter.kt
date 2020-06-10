@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.databinding.AnimeListItemBinding
 import com.sanmidev.yetanotheranimelist.di.module.GlideApp
 
@@ -59,7 +59,7 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
         super.submitList(list?.let { ArrayList(it) })
     }
 
-    fun setAnimeImageClickListener(listener : ( AnimeEntity) -> Unit){
+    fun setAnimeImageClickListener(listener : (AnimeEntity) -> Unit){
         onAnimeImageClickListener = listener
     }
 }
