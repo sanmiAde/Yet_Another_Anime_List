@@ -15,11 +15,18 @@ import androidx.navigation.fragment.navArgs
 import com.sanmidev.yetanotheranimelist.MainActivity
 import com.sanmidev.yetanotheranimelist.R
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
+import com.sanmidev.yetanotheranimelist.databinding.AnimeDetailFragmentBinding
+import com.sanmidev.yetanotheranimelist.di.module.GlideApp
 import timber.log.Timber
 import javax.inject.Inject
 
 
 class AnimeDetailFragment : Fragment() {
+
+    private var detailFragmentBinding : AnimeDetailFragmentBinding? = null
+
+    val binding : AnimeDetailFragmentBinding
+        get() = detailFragmentBinding!!
 
     @Inject
     lateinit var savedStateViewModelFactory: AnimeDetailViewModel.VmFactory.Factory
@@ -43,7 +50,8 @@ class AnimeDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.anime_detail_fragment, container, false)
+        detailFragmentBinding = AnimeDetailFragmentBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -63,20 +71,32 @@ class AnimeDetailFragment : Fragment() {
         viewModel.animeDetailResultState.observe(viewLifecycleOwner, Observer {animeDetailResult ->
             when(animeDetailResult){
                 AnimeDetailResult.Loading -> {
-
+                    Timber.d("Loading")
                 }
                 is AnimeDetailResult.Success -> {
-                    Timber.d(animeDetailResult.data.toString())
+                    Timber.d(animeDetailResult.data.imageUrl)
+                    Timber.d( animeDetailResult.data.synopsis)
+
+                    GlideApp.with(this).load(animeDetailResult.data.imageUrl).into(binding.imgAnimePicture)
+
+                    binding.txtSynopsis.text = animeDetailResult.data.synopsis
                 }
                 is AnimeDetailResult.APIerror -> {
                     Timber.d(animeDetailResult.jikanErrorRespone.toString())
                 }
                 is AnimeDetailResult.Exception -> {
-
+                    Timber.d(animeDetailResult.message)
+                    Timber.d(animeDetailResult.throwable)
                 }
             }
         })
 
+    }
+
+
+    override fun onDestroy() {
+        detailFragmentBinding = null
+        super.onDestroy()
     }
 
     companion object {

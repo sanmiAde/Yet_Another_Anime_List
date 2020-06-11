@@ -7,11 +7,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class AiredResponse(
     @Json(name = "from")
-    val from: String,
+    val from: String?,
     @Json(name = "prop")
     val prop: PropResponse,
     @Json(name = "string")
-    val string: String,
+    val string: String?,
     @Json(name = "to")
-    val to: String
+    val to: String?
 )

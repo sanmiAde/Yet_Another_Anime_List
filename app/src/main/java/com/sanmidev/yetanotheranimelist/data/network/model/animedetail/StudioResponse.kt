@@ -7,11 +7,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class StudioResponse(
     @Json(name = "mal_id")
-    val malId: Int,
+    val malId: Int?,
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "type")
-    val type: String,
+    val type: String?,
     @Json(name = "url")
-    val url: String
+    val url: String?
 )

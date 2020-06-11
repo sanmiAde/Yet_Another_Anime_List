@@ -12,24 +12,24 @@ class AnimeDetailMapper @Inject constructor() {
 
         return AnimeDetailEnitity(
             airedEntity,
-            animeDetailResponse.airing,
-            animeDetailResponse.broadcast,
-            animeDetailResponse.duration,
-            animeDetailResponse.endingThemes,
-            animeDetailResponse.episodes,
+            animeDetailResponse.airing ?: false,
+            animeDetailResponse.broadcast ?: "",
+            animeDetailResponse.duration ?: "",
+            animeDetailResponse.endingThemes ?: emptyList(),
+            animeDetailResponse.episodes ?: 0,
             listOfGenres,
-            animeDetailResponse.imageUrl,
-            animeDetailResponse.malId,
-            animeDetailResponse.openingThemes,
-            animeDetailResponse.premiered,
-            animeDetailResponse.rating,
-            animeDetailResponse.trailerUrl,
-            animeDetailResponse.score,
-            animeDetailResponse.status,
-            animeDetailResponse.synopsis,
-            animeDetailResponse.title,
-            animeDetailResponse.type,
-            animeDetailResponse.url
+            animeDetailResponse.imageUrl ?: "",
+            animeDetailResponse.malId ?: 0,
+            animeDetailResponse.openingThemes ?: emptyList(),
+            animeDetailResponse.premiered ?: "",
+            animeDetailResponse.rating ?: "",
+            animeDetailResponse.trailerUrl ?: "",
+            animeDetailResponse.score ?: "",
+            animeDetailResponse.status ?: "",
+            animeDetailResponse.synopsis ?: "",
+            animeDetailResponse.title ?: "",
+            animeDetailResponse.type ?: "",
+            animeDetailResponse.url ?: ""
         )
     }
 
@@ -37,17 +37,22 @@ class AnimeDetailMapper @Inject constructor() {
     fun transformGenreReponseToGenreEntity(genreResponse: List<GenreResponse>): List<GenreEntity> {
         return genreResponse.map { genreResponse: GenreResponse ->
             GenreEntity(
-                genreResponse.malId,
-                genreResponse.name,
-                genreResponse.type,
-                genreResponse.url
+                genreResponse.malId ?: 0,
+                genreResponse.name ?: "",
+                genreResponse.type ?: "",
+                genreResponse.url ?: ""
             )
         }
     }
 
     fun transformAiredResponseToAiredEntity(airedResponse: AiredResponse): AiredEntity {
         val propEntity = tranformPropResponseToPropEntity(airedResponse.prop)
-        return AiredEntity(airedResponse.from, propEntity, airedResponse.string, airedResponse.to)
+        return AiredEntity(
+            airedResponse.from ?: "",
+            propEntity,
+            airedResponse.string ?: "",
+            airedResponse.to ?: ""
+        )
     }
 
     fun tranformPropResponseToPropEntity(propResponse: PropResponse): PropEntity {
@@ -59,12 +64,12 @@ class AnimeDetailMapper @Inject constructor() {
 
 
     fun tranformToResponseToToEntity(toResponse: ToResponse): ToEntity {
-        return ToEntity(toResponse.day, toResponse.month, toResponse.year)
+        return ToEntity(toResponse.day ?: "", toResponse.month ?: "", toResponse.year ?: "")
     }
 
 
     fun tranformFromResponseToFromEntity(fromResponse: FromResponse): FromEntity {
-        return FromEntity(fromResponse.day, fromResponse.month, fromResponse.year)
+        return FromEntity(fromResponse.day ?: "", fromResponse.month ?: "", fromResponse.year ?: "")
     }
 
 }

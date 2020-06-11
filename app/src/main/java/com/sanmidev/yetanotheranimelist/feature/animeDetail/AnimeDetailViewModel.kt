@@ -11,6 +11,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class AnimeDetailViewModel(
     private val jikanRepository: JikanRepository,
@@ -59,6 +60,8 @@ class AnimeDetailViewModel(
 
     private fun getAnimeDetail() {
         val malId = savedStateHandle.get<Int>(AnimeDetailFragment.DETAIL_ANIME_ID_KEY) ?: 0
+
+        animeDetailMutableResult.value  = AnimeDetailResult.Loading
 
         compositeDisposable.add(
             jikanRepository.getAnimeDetail(malId)

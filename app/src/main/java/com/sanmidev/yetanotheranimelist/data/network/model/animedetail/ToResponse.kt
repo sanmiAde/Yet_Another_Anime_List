@@ -7,9 +7,9 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ToResponse(
     @Json(name = "day")
-    val day: String,
+    val day: String?,
     @Json(name = "month")
-    val month: String,
+    val month: String?,
     @Json(name = "year")
-    val year: String
+    val year: String?
 )

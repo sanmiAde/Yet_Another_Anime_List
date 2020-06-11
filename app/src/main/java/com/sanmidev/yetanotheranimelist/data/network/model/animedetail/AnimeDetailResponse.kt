@@ -4,78 +4,79 @@ package com.sanmidev.yetanotheranimelist.data.network.model.animedetail
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+//TODO MAKE ALL THE FIELDS NULLABLE
 @JsonClass(generateAdapter = true)
 data class AnimeDetailResponse(
     @Json(name = "aired")
     val aired: AiredResponse,
     @Json(name = "airing")
-    val airing: Boolean,
+    val airing: Boolean?,
     @Json(name = "background")
     val background: String?,
     @Json(name = "broadcast")
-    val broadcast: String,
+    val broadcast: String?,
     @Json(name = "duration")
-    val duration: String,
+    val duration: String?,
     @Json(name = "ending_themes")
-    val endingThemes: List<String>,
+    val endingThemes: List<String>?,
     @Json(name = "episodes")
     val episodes: Int?,
     @Json(name = "favorites")
-    val favorites: Int,
+    val favorites: Int?,
     @Json(name = "genres")
     val genreResponses: List<GenreResponse>,
     @Json(name = "image_url")
-    val imageUrl: String,
+    val imageUrl: String?,
     @Json(name = "licensors")
-    val licensors: List<Any>,
+    val licensors: List<Any>?,
     @Json(name = "mal_id")
-    val malId: Int,
+    val malId: Int?,
     @Json(name = "members")
-    val members: Int,
+    val members: Int?,
     @Json(name = "opening_themes")
-    val openingThemes: List<String>,
+    val openingThemes: List<String>?,
     @Json(name = "popularity")
-    val popularity: Int,
+    val popularity: Int?,
     @Json(name = "premiered")
-    val premiered: String,
+    val premiered: String?,
     @Json(name = "producers")
-    val producers: List<Any>,
+    val producers: List<Any>?,
     @Json(name = "rank")
-    val rank: Any,
+    val rank: Any?,
     @Json(name = "rating")
-    val rating: String,
+    val rating: String?,
     @Json(name = "related")
-    val relatedResponse: RelatedResponse,
+    val relatedResponse: RelatedResponse?,
     @Json(name = "request_cache_expiry")
-    val requestCacheExpiry: Int,
+    val requestCacheExpiry: Int?,
     @Json(name = "request_cached")
-    val requestCached: Boolean,
+    val requestCached: Boolean?,
     @Json(name = "request_hash")
-    val requestHash: String,
+    val requestHash: String?,
     @Json(name = "score")
     val score: String?,
     @Json(name = "scored_by")
-    val scoredBy: Any,
+    val scoredBy: Any?,
     @Json(name = "source")
-    val source: String,
+    val source: String?,
     @Json(name = "status")
-    val status: String,
+    val status: String?,
     @Json(name = "studios")
-    val studioResponses: List<StudioResponse>,
+    val studioResponses: List<StudioResponse>?,
     @Json(name = "synopsis")
-    val synopsis: String,
+    val synopsis: String?,
     @Json(name = "title")
-    val title: String,
+    val title: String?,
     @Json(name = "title_english")
-    val titleEnglish: Any,
+    val titleEnglish: Any?,
     @Json(name = "title_japanese")
-    val titleJapanese: String,
+    val titleJapanese: String?,
     @Json(name = "title_synonyms")
-    val titleSynonyms: List<String>,
+    val titleSynonyms: List<String>?,
     @Json(name = "trailer_url")
-    val trailerUrl: String,
+    val trailerUrl: String?,
     @Json(name = "type")
-    val type: String,
+    val type: String?,
     @Json(name = "url")
-    val url: String
+    val url: String?
 )
