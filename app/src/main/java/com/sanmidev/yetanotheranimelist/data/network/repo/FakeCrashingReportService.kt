@@ -5,7 +5,7 @@ import java.lang.Exception
 /***
  * Fake Saas impl for testing
  */
-class FakeSaas : Saas{
+class FakeCrashingReportService : CrashingReportService{
     override fun logException(exception: Exception) {
         println(exception)
     }

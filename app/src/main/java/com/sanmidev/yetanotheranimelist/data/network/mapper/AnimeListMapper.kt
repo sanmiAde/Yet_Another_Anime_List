@@ -23,15 +23,11 @@ class AnimeListMapper @Inject constructor() {
 
            animeEntities.add(
                AnimeEntity(
-                   animeResponse.endDate ?: "",
-                   animeResponse.episodes ?: 0,
-                   animeResponse.imageUrl,
-                   animeResponse.malId,
-                   animeResponse.score,
-                   animeResponse.startDate ?: "",
-                   animeResponse.title,
-                   animeResponse.type,
-                   animeResponse.url
+                 imageUrl = animeResponse.imageUrl,
+                  id =  animeResponse.malId,
+                  title =  animeResponse.title
+
+
                )
            )
         }

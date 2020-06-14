@@ -89,7 +89,9 @@ class AiringViewModel(
 
 
     fun cancelSubscription() {
-        compositeDisposable.dispose()
+        if(!compositeDisposable.isDisposed){
+            compositeDisposable.dispose()
+        }
     }
 
     override fun onCleared() {

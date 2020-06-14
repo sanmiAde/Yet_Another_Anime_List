@@ -115,7 +115,10 @@ class UpComingAnimesViewModel(
 
 
     fun cancelSubscriptions() {
-        compositeDisposable.dispose()
+        if(!compositeDisposable.isDisposed){
+            compositeDisposable.dispose()
+        }
+
     }
 
 

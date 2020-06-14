@@ -14,7 +14,7 @@ import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.*
 import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorResponeJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.repo.FakeSaas
+import com.sanmidev.yetanotheranimelist.data.network.repo.FakeCrashingReportService
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
@@ -54,7 +54,7 @@ class UpComingAnimesViewModelTest {
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
     private  lateinit var dispatcher : Dispatcher
-    private val fakeSaas = FakeSaas()
+    private val fakeSaas = FakeCrashingReportService()
 
     @Mock
     lateinit var observer: Observer<AnimeListResult>

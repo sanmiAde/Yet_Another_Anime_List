@@ -87,7 +87,7 @@ class UpComingAnimesFragment : Fragment() {
         animeListAdaper = AnimeListAdapter(this.requireContext())
         val animePictureClickListener: (AnimeEntity) -> Unit = { animeEntity: AnimeEntity ->
 
-            val directions = AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id)
+            val directions =UpComingAnimesFragmentDirections.actionUpComingAnimesFragmentToAnimeDetailFragment(animeEntity.id)
 
             findNavController().navigateSafely(directions, R.id.upComingAnimesFragment)
         }
@@ -220,6 +220,11 @@ class UpComingAnimesFragment : Fragment() {
                 }
 
             }
+    }
+
+    override fun onDetach() {
+        viewModel.cancelSubscriptions()
+        super.onDetach()
     }
 
     override fun onDestroyView() {

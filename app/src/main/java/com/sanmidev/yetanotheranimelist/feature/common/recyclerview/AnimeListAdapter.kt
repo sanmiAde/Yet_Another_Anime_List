@@ -49,8 +49,8 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
     }
 
     /***
-     * This method is overridden because of  how the submitList is implemented.
-     * List adapter does not determine  a previously submitted list contains different items
+     * This method is overridden because of  how  submitList is implemented.
+     * List adapter does not determine if a previously submitted list contains different items
      * So we create submit our list wrapped in an arraylist.
      * @author oluwasanmi Aderibigbe
      */

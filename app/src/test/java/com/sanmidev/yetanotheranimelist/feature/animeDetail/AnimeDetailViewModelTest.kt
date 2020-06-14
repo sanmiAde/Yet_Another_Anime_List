@@ -10,37 +10,28 @@ import com.nhaarman.mockito_kotlin.verify
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.AnimeDetailEnitity
-import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
-import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
-import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponseJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
-import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
-import com.sanmidev.yetanotheranimelist.data.network.repo.FakeSaas
+import com.sanmidev.yetanotheranimelist.data.network.repo.FakeCrashingReportService
+import com.sanmidev.yetanotheranimelist.data.network.repo.FakeFavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
-import com.sanmidev.yetanotheranimelist.feature.upComingAnimes.UpComingAnimesViewModel
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
 import com.squareup.moshi.Moshi
 import okhttp3.mockwebserver.Dispatcher
-import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
 import org.junit.Before
 
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
-import java.net.HttpURLConnection
 
 @RunWith(MockitoJUnitRunner::class)
 class AnimeDetailViewModelTest {
@@ -61,7 +52,8 @@ class AnimeDetailViewModelTest {
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
     private  lateinit var dispatcher : Dispatcher
-    private val fakeSaas = FakeSaas()
+    private val fakeSaas = FakeCrashingReportService()
+    private val fakeFavouriteAnimeRepository = FakeFavouriteAnimeRepository()
 
     @Mock
     lateinit var observer: Observer<AnimeDetailResult>
@@ -89,7 +81,7 @@ class AnimeDetailViewModelTest {
         mockWebServer.dispatcher =  dispatcher
 
         //WHEN
-        SUT = AnimeDetailViewModel(jikanRepository, TestAppScheduler(), application,
+        SUT = AnimeDetailViewModel(jikanRepository,fakeFavouriteAnimeRepository, TestAppScheduler(), application,
             SavedStateHandle( mapOf(Pair(AnimeDetailFragment.DETAIL_ANIME_ID_KEY, 3983))))
 
         SUT.animeDetailResultState.observeForever(observer)
@@ -104,13 +96,28 @@ class AnimeDetailViewModelTest {
         mockWebServer.dispatcher =  dispatcher
 
         //WHEN
-        SUT = AnimeDetailViewModel(jikanRepository, TestAppScheduler(), application,
+        SUT = AnimeDetailViewModel(jikanRepository, fakeFavouriteAnimeRepository, TestAppScheduler(), application,
             SavedStateHandle( mapOf(Pair(AnimeDetailFragment.DETAIL_ANIME_ID_KEY, 5000))))
 
         SUT.animeDetailResultState.observeForever(observer)
 
         //THEN
         verify(observer).onChanged(any(AnimeDetailResult.APIerror::class.java))
+    }
+
+    @Test
+    fun favouriteAnime_shouldFavoriteAnime_whenFavouriteButtonIsClicked(){
+        //GIVEN
+
+        SUT = AnimeDetailViewModel(jikanRepository, fakeFavouriteAnimeRepository, TestAppScheduler(), application,
+            SavedStateHandle( mapOf(Pair(AnimeDetailFragment.DETAIL_ANIME_ID_KEY, 5000))))
+
+        //WHEN
+        //SUT.favouriteAnime(3045)
+
+
+        //THEN
+
     }
 
     @After

@@ -41,7 +41,7 @@ class JikanRepositoryImplTest {
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
-    private val fakeSaas = FakeSaas()
+    private val fakeSaas = FakeCrashingReportService()
 
     @Before
     fun setUp() {

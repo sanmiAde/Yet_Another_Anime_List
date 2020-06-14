@@ -4,17 +4,20 @@ import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
+import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
+import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 
 class AnimeDetailViewModel(
     private val jikanRepository: JikanRepository,
+    private val favouriteAnimeRepostoryImpl: FavouriteAnimeRepository,
     private val rxScheduler: RxScheduler,
     private val application: Application,
     private val savedStateHandle: SavedStateHandle
@@ -22,11 +25,19 @@ class AnimeDetailViewModel(
 
     private val animeDetailMutableResult = MutableLiveData<AnimeDetailResult>()
 
+    private val isFavouritedMutableLiveData = MutableLiveData<FavouriteAnimeResult>()
 
     val compositeDisposable = CompositeDisposable()
 
     val animeDetailResultState: LiveData<AnimeDetailResult>
         get() = animeDetailMutableResult
+
+    val isFavourited: LiveData<FavouriteAnimeResult>
+        get() = isFavouritedMutableLiveData
+
+    private var id = Int.MIN_VALUE
+
+    private lateinit var animeResult: AnimeDetailResult
 
 
     init {
@@ -35,6 +46,7 @@ class AnimeDetailViewModel(
 
     class VmFactory @AssistedInject constructor(
         private val jikanRepository: JikanRepository,
+        private val favouriteAnimeRepostoryImpl: FavouriteAnimeRepository,
         private val rxScheduler: RxScheduler,
         private val application: Application,
         @Assisted savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -45,7 +57,13 @@ class AnimeDetailViewModel(
             modelClass: Class<T>,
             handle: SavedStateHandle
         ): T {
-            return AnimeDetailViewModel(jikanRepository, rxScheduler, application, handle) as T
+            return AnimeDetailViewModel(
+                jikanRepository,
+                favouriteAnimeRepostoryImpl,
+                rxScheduler,
+                application,
+                handle
+            ) as T
         }
 
 
@@ -58,13 +76,17 @@ class AnimeDetailViewModel(
         }
     }
 
+    /****
+     * Gets the anime detail from the jikan api
+     * malId is the id of the anime passed from the [AnimeDetailFragment] to the [AnimeDetailViewModel] via savedStateHandle.
+     */
     private fun getAnimeDetail() {
-        val malId = savedStateHandle.get<Int>(AnimeDetailFragment.DETAIL_ANIME_ID_KEY) ?: 0
+        id = savedStateHandle.get<Int>(AnimeDetailFragment.DETAIL_ANIME_ID_KEY) ?: 0
 
-        animeDetailMutableResult.value  = AnimeDetailResult.Loading
+        animeDetailMutableResult.value = AnimeDetailResult.Loading
 
         compositeDisposable.add(
-            jikanRepository.getAnimeDetail(malId)
+            jikanRepository.getAnimeDetail(id)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
                 .subscribeBy(
@@ -74,11 +96,58 @@ class AnimeDetailViewModel(
                     },
                     onSuccess = { animeDetailResult: AnimeDetailResult ->
 
+                        animeResult = animeDetailResult
                         animeDetailMutableResult.value = animeDetailResult
                     }
                 )
         )
     }
 
+
+    fun favouriteAnime() {
+
+        favouriteAnimeRepostoryImpl.hasBeenSaved(id).flatMap {
+            favouriteAnimeRepostoryImpl.favouriteAnime(animeResult, it)
+                .subscribeOn(rxScheduler.io())
+                .observeOn(rxScheduler.main())
+        }.subscribeBy(
+                onSuccess = {
+                    isFavouritedMutableLiveData.value = it
+                },
+                onError = {
+
+                }
+            ).addTo(compositeDisposable)
+
+
+    }
+
+    fun hasBeenFavourited() {
+        favouriteAnimeRepostoryImpl.hasBeenSaved(id).subscribeBy({
+
+        }, {
+            if (it) {
+                isFavouritedMutableLiveData.value = FavouriteAnimeResult.favourited
+            } else {
+                isFavouritedMutableLiveData.value = FavouriteAnimeResult.unFavourited
+            }
+        }).addTo(compositeDisposable)
+    }
+
+    fun getSize(): Int {
+        return favouriteAnimeRepostoryImpl.getAnimeSize()
+    }
+
+
+    override fun onCleared() {
+        disposeCompositeDisposable()
+        super.onCleared()
+    }
+
+    fun disposeCompositeDisposable() {
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
+        }
+    }
 
 }

@@ -1,14 +1,12 @@
 package com.sanmidev.yetanotheranimelist.data.local.model.animelist
 
-data class AnimeEntity(
-    val endDate: String,
-    val episodes: Int,
-    val imageUrl: String,
-    val id: Int,
-    val score: Double,
-    val startDate: String,
-    val title: String,
-    val type: String,
-    val animeUrl: String
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "anime_entity_table")
+data class AnimeEntity(
+    val imageUrl: String,
+    @PrimaryKey
+    val id: Int,
+    val title: String
 )

@@ -150,6 +150,9 @@ dependencies {
     //Decorator
     implementation "io.cabriole:decorator:$decorator_version"
 
+    //FACEBOOK SHIMMER
+    implementation "com.facebook.shimmer:shimmer:$facebook_shimmer_version"
+
     //test
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
@@ -175,6 +178,6 @@ dependencies {
 
     //Truth
     testImplementation "com.google.truth:truth:$truth_version"
-
+    androidTestImplementation "com.google.truth:truth:$truth_version"
 
 }

@@ -5,7 +5,7 @@ import java.lang.Exception
 /***
  * Repository for interacting with a software as a service platform
  */
-interface Saas {
+interface CrashingReportService {
 
     fun logException(exception: Exception)
 }

@@ -34,17 +34,15 @@ class AiringFragment : Fragment() {
     private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
 
 
-
     private var animeListAdaper: AnimeListAdapter? = null
 
     @Inject
     lateinit var viewModelFactory: AiringViewModel.VMFactory
 
-    private var  fragmentAiringBinding : FragmentAiringBinding? = null
+    private var fragmentAiringBinding: FragmentAiringBinding? = null
 
 
-
-    val binding : FragmentAiringBinding
+    val binding: FragmentAiringBinding
         get() = fragmentAiringBinding!!
 
 
@@ -56,7 +54,7 @@ class AiringFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       fragmentAiringBinding = FragmentAiringBinding.inflate(inflater)
+        fragmentAiringBinding = FragmentAiringBinding.inflate(inflater)
         return binding.root
     }
 
@@ -84,7 +82,8 @@ class AiringFragment : Fragment() {
         //init adapter
         animeListAdaper = AnimeListAdapter(this.requireContext())
         val animePictureClickListener: (AnimeEntity) -> Unit = { animeEntity: AnimeEntity ->
-            val directions = AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id)
+            val directions =
+                AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id)
 
             findNavController().navigateSafely(directions, R.id.trendingFragment)
         }
@@ -215,6 +214,11 @@ class AiringFragment : Fragment() {
                 }
 
             }
+    }
+
+    override fun onDetach() {
+        viewModel.cancelSubscription()
+        super.onDetach()
     }
 
     override fun onDestroyView() {

@@ -1,5 +1,7 @@
 package com.sanmidev.yetanotheranimelist
 
+
+
 import com.github.javafaker.Faker
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.*
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
@@ -8,7 +10,7 @@ import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListRe
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorRespone
 
-object DataUtils {
+object AndroidDataUtils {
 
     var genreResponse: MutableList<GenreResponse> = mutableListOf()
 
