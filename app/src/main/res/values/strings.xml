@@ -10,4 +10,5 @@
     <string name="fav_anime_error_txt">Error could not favourite anime</string>
     <string name="favourite_success_list">Anime has been added to favourites list</string>
     <string name="unfavourite_anime_success_txt">Anime has been removed from favourites</string>
+    <string name="txt_sysnopsis">Synopsis</string>
 </resources>

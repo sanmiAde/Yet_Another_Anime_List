@@ -83,7 +83,7 @@ class AiringFragment : Fragment() {
         animeListAdaper = AnimeListAdapter(this.requireContext())
         val animePictureClickListener: (AnimeEntity) -> Unit = { animeEntity: AnimeEntity ->
             val directions =
-                AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id)
+                AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id, animeEntity.imageUrl, animeEntity.title)
 
             findNavController().navigateSafely(directions, R.id.trendingFragment)
         }

@@ -13,10 +13,10 @@
         <action
             android:id="@+id/action_upComingAnimesFragment_to_animeDetailFragment"
             app:destination="@id/animeDetailFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/trendingFragment"
@@ -25,10 +25,10 @@
         <action
             android:id="@+id/action_trendingFragment_to_animeDetailFragment"
             app:destination="@id/animeDetailFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/animeDetailFragment"
@@ -39,5 +39,13 @@
             android:name="malId"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="imageUrl"
+            app:argType="string"
+            android:defaultValue='""' />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 </navigation>

@@ -87,7 +87,7 @@ class UpComingAnimesFragment : Fragment() {
         animeListAdaper = AnimeListAdapter(this.requireContext())
         val animePictureClickListener: (AnimeEntity) -> Unit = { animeEntity: AnimeEntity ->
 
-            val directions =UpComingAnimesFragmentDirections.actionUpComingAnimesFragmentToAnimeDetailFragment(animeEntity.id)
+            val directions =UpComingAnimesFragmentDirections.actionUpComingAnimesFragmentToAnimeDetailFragment(animeEntity.id, animeEntity.imageUrl, animeEntity.title)
 
             findNavController().navigateSafely(directions, R.id.upComingAnimesFragment)
         }

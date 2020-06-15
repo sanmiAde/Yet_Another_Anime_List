@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_format_list_bulleted_black_24dp"
         android:title="Trending" />
     <item
-        android:icon="@drawable/ic_favorite_black_24dp"
+        android:icon="@drawable/ic_favorite_24dp"
         android:title="Favourite" />
     <item
         android:icon="@drawable/ic_account_circle_black_24dp"

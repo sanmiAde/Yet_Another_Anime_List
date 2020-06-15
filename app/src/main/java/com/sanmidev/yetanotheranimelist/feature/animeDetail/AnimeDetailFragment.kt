@@ -2,13 +2,17 @@ package com.sanmidev.yetanotheranimelist.feature.animeDetail
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.chip.Chip
 import com.sanmidev.yetanotheranimelist.MainActivity
 import com.sanmidev.yetanotheranimelist.R
 import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
@@ -64,6 +68,10 @@ class AnimeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        GlideApp.with(this).load(args.imageUrl)
+            .into(binding.imgAnimePicture)
+        tweakCollaspingToolbar()
+
         initObserveGetDetailState()
         initObserveIsFavouriteState()
         initOnclickListeners()
@@ -103,6 +111,7 @@ class AnimeDetailFragment : Fragment() {
 
     private fun initOnclickListeners() {
         binding.floatingActionButton.setOnClickListener {
+
             viewModel.favouriteAnime()
         }
     }
@@ -112,10 +121,12 @@ class AnimeDetailFragment : Fragment() {
         viewModel.isFavourited.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 FavouriteAnimeResult.favourited -> {
-                    binding.floatingActionButton.setImageResource(R.drawable.ic_favorite_black_24dp)
+
+                    binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),  R.drawable.ic_favorite_24dp));
                 }
                 FavouriteAnimeResult.unFavourited -> {
-                    binding.floatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp)
+
+                    binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),  R.drawable.ic_favorite_unfav_24dp));
                 }
                 is FavouriteAnimeResult.error -> {
                     fireToast(requireContext(), getString(R.string.fav_anime_error_txt))
@@ -126,16 +137,56 @@ class AnimeDetailFragment : Fragment() {
     }
 
     /***
+     * Using to tweak collasping toolbar so the title of the anime only shows when the toolbar is collasped.
+     */
+    private fun tweakCollaspingToolbar(){
+        var isShow = true
+        var scrollRange = -1
+        binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
+            if (scrollRange == -1){
+                scrollRange = barLayout?.totalScrollRange!!
+            }
+            if (scrollRange + verticalOffset == 0){
+                binding.collapsingToolBar.title = args.title
+                isShow = true
+            } else if (isShow){
+                binding.collapsingToolBar.title = " " //careful there should a space between double quote otherwise it wont work
+                isShow = false
+            }
+        })
+    }
+
+    /***
      * Binds the success data recieved from the Jikan API
      * [animeDetailResult] is the success result from the API.
      */
     private fun bindSuccessData(animeDetailResult: AnimeDetailResult.Success) {
-        GlideApp.with(this).load(animeDetailResult.data.imageUrl)
-            .into(binding.imgAnimePicture)
-
         binding.txtSynopsis.text = animeDetailResult.data.synopsis
 
-        binding.collapsingToolBar.title = animeDetailResult.data.title
+       val genres =  viewModel.processGenre(animeDetailResult.data.genreEntity)
+
+        genres.forEach { title ->
+            createChip(title)
+        }
+    }
+
+    private fun createChip(tag: String) {
+        val chip =
+            this.layoutInflater.inflate(R.layout.genre_chip, null, false) as Chip
+        chip.text = tag
+        val paddingDp = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 10f,
+            resources.displayMetrics
+        ).toInt()
+
+        val generatedId = View.generateViewId()
+        // All tag should be pre selected.
+        chip.id = generatedId
+
+        chip.setPadding(paddingDp, 0, paddingDp, 0)
+        binding.genreChipGroup.addView(chip)
+
+
     }
 
     override fun onDetach() {

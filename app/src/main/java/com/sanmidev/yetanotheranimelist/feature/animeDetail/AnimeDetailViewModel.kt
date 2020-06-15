@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
+import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.GenreEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
@@ -138,6 +139,8 @@ class AnimeDetailViewModel(
         return favouriteAnimeRepostoryImpl.getAnimeSize()
     }
 
+   // fun ge
+
 
     override fun onCleared() {
         disposeCompositeDisposable()
@@ -148,6 +151,10 @@ class AnimeDetailViewModel(
         if (!compositeDisposable.isDisposed) {
             compositeDisposable.dispose()
         }
+    }
+
+    fun processGenre(genreEntities: List<GenreEntity>): List<String> {
+        return genreEntities.map { it.name }
     }
 
 }
