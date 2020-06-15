@@ -3,9 +3,9 @@ package com.sanmidev.yetanotheranimelist.data.network.mapper
 import com.github.javafaker.Faker
 import com.google.common.truth.Truth
 import com.sanmidev.yetanotheranimelist.DataUtils
-import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeResponse
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

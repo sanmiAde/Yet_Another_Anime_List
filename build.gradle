@@ -74,6 +74,9 @@ buildscript {
 
         //Decorator
         decorator_version = "1.1.0"
+
+        //Facebook shimmer
+        facebook_shimmer_version = "0.5.0"
     }
 
 

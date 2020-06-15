@@ -1,9 +1,6 @@
 package com.sanmidev.yetanotheranimelist.di.module
 
-import com.sanmidev.yetanotheranimelist.data.network.repo.FirebaseImpl
-import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
-import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
-import com.sanmidev.yetanotheranimelist.data.network.repo.Saas
+import com.sanmidev.yetanotheranimelist.data.network.repo.*
 import com.sanmidev.yetanotheranimelist.utils.AppScheduler
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
 import dagger.Binds
@@ -18,5 +15,8 @@ abstract class ApplicationModule {
     abstract fun bindRxScheduler(appScheduler: AppScheduler) : RxScheduler
 
     @Binds
-    abstract fun bindsSAAS(firebaseImpl: FirebaseImpl) : Saas
+    abstract fun bindsSAAS(firebaseImpl: FirebaseImpl) : CrashingReportService
+
+    @Binds
+    abstract fun bindsFavouriteAnimeRepository(favouriteAnimeRepostoryImpl: FavouriteAnimeRepostoryImpl) : FavouriteAnimeRepository
 }

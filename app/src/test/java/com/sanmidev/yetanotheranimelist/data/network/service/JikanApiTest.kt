@@ -4,12 +4,10 @@ import com.github.javafaker.Faker
 import com.google.common.truth.Truth
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
-import com.sanmidev.yetanotheranimelist.data.local.model.AnimeEntity
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponse
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeListResponseJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.model.AnimeResponse
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
+import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
 import com.squareup.moshi.Moshi
-import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
 import org.junit.Rule
@@ -68,5 +66,21 @@ class JikanApiTest {
         testObserver.assertNoErrors()
     }
 
+
+    @Test
+    fun getAnimeDetail_Calls_The_Correct_API_Successfully(){
+        //GIVEN
+        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
+
+        //WHEN
+        val testObserver = SUT.getDetailAnime("39587").test()
+        val request = mockWebServer.takeRequest()
+
+
+        //THEN
+        Truth.assertThat("/v3/anime/39587").isEqualTo(request.path)
+        Truth.assertThat("GET").isEqualTo(request.method)
+
+    }
 
 }
