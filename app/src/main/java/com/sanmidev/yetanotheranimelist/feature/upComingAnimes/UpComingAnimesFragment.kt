@@ -67,6 +67,7 @@ class UpComingAnimesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView()
+        initToolBar()
         observeNextAnimeList()
     }
 
@@ -74,6 +75,11 @@ class UpComingAnimesFragment : Fragment() {
         super.onAttach(context)
 
         (activity as MainActivity).activityComponent.inject(this)
+    }
+
+
+    private fun initToolBar() {
+        animeUpComingAnimesBinding.include2.toolbar.title = getString(R.string.upcoming_anime_txt)
     }
 
     private fun initRecyclerView() {

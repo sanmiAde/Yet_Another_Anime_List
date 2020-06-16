@@ -21,6 +21,7 @@ import com.sanmidev.yetanotheranimelist.databinding.AnimeDetailFragmentBinding
 import com.sanmidev.yetanotheranimelist.di.module.GlideApp
 import com.sanmidev.yetanotheranimelist.feature.utils.fireToast
 import com.sanmidev.yetanotheranimelist.feature.utils.gone
+import com.sanmidev.yetanotheranimelist.feature.utils.initToolbarButton
 import com.sanmidev.yetanotheranimelist.feature.utils.visible
 import javax.inject.Inject
 
@@ -148,12 +149,16 @@ class AnimeDetailFragment : Fragment() {
             }
             if (scrollRange + verticalOffset == 0){
                 binding.collapsingToolBar.title = args.title
+                binding.AppBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
                 isShow = true
             } else if (isShow){
+                binding.AppBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
                 binding.collapsingToolBar.title = " " //careful there should a space between double quote otherwise it wont work
                 isShow = false
             }
         })
+
+        initToolbarButton(requireActivity(), binding.AppBar)
     }
 
     /***

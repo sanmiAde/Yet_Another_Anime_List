@@ -48,4 +48,14 @@
             app:argType="string"
             android:defaultValue='""' />
     </fragment>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.favourites.FavouriteFragment"
+        android:label="favourite_fragment"
+        tools:layout="@layout/favourite_fragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.profile.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
 </navigation>

@@ -62,7 +62,12 @@ class AiringFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView()
+        initToolBar()
         observeNextAnimeList()
+    }
+
+    private fun initToolBar() {
+        binding.include.toolbar.title = getString(R.string.trending_anime_txt)
     }
 
     override fun onAttach(context: Context) {

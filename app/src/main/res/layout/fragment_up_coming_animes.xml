@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2"
         tools:itemCount="50"
         tools:listitem="@layout/anime_list_item" />
 
@@ -30,6 +30,15 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/upComingAnimeList"
         app:layout_constraintEnd_toEndOf="@+id/upComingAnimeList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/toolbar_partial"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

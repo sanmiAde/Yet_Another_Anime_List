@@ -11,4 +11,8 @@
     <string name="favourite_success_list">Anime has been added to favourites list</string>
     <string name="unfavourite_anime_success_txt">Anime has been removed from favourites</string>
     <string name="txt_sysnopsis">Synopsis</string>
+    <string name="trending_anime_txt">Trending Animes</string>
+    <string name="upcoming_anime_txt">Upcoming Animes</string>
+    <string name="favourite_anime_txt">Favourite Anime</string>
+    <string name="profile_txt">My Profile</string>
 </resources>

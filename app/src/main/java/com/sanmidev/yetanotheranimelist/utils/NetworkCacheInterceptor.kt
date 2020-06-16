@@ -25,7 +25,7 @@ class NetworkCacheInterceptor @Inject constructor (val application: Application)
         *  and indicate an error in fetching the response.
         *  The 'max-age' attribute is responsible for this behavior.
         */
-            request.newBuilder().header("Cache-Control", "public, max-age=" + 60)
+            request.newBuilder().header("Cache-Control", "public, max-age=" + 5)
                 .removeHeader("Pragma").build()
         else
         /*

@@ -5,5 +5,4 @@ import dagger.Module
 
 @AssistedModule
 @Module(includes = [AssistedInject_AssistedInjectModule::class])
-public class AssistedInjectModule {
-}
+ class AssistedInjectModule

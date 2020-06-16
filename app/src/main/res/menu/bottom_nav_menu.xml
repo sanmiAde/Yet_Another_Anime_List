@@ -11,8 +11,10 @@
         android:title="Trending" />
     <item
         android:icon="@drawable/ic_favorite_24dp"
+        android:id="@+id/favouriteFragment"
         android:title="Favourite" />
     <item
+        android:id="@+id/profileFragment"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="Profile" />
 </menu>

@@ -135,12 +135,6 @@ class AnimeDetailViewModel(
         }).addTo(compositeDisposable)
     }
 
-    fun getSize(): Int {
-        return favouriteAnimeRepostoryImpl.getAnimeSize()
-    }
-
-   // fun ge
-
 
     override fun onCleared() {
         disposeCompositeDisposable()
