@@ -15,6 +15,7 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class AnimeDetailViewModel(
     private val jikanRepository: JikanRepository,
@@ -92,6 +93,7 @@ class AnimeDetailViewModel(
                 .observeOn(rxScheduler.main())
                 .subscribeBy(
                     onError = {
+                        Timber.d(it.toString())
                         animeDetailMutableResult.value =
                             AnimeDetailResult.Exception("Could not connect to server", it)
                     },

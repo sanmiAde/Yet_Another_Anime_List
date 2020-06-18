@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.appdistribution'
 
 android {
     compileSdkVersion 29
@@ -22,15 +23,25 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", '"https://api.jikan.moe/"'
         }
         QA {
+            signingConfig signingConfigs.debug
+            minifyEnabled true
             applicationIdSuffix = '.QA'
             versionNameSuffix = '.QA'
             debuggable = true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", '"https://api.jikan.moe/"'
+
+            firebaseAppDistribution {
+                releaseNotes = "0.5 is ready for deployment"
+                groups = "sanmiaderibigbe@gmail.com"
+            }
         }
         debug {
             applicationIdSuffix = '.debug'
@@ -112,6 +123,9 @@ dependencies {
 
     // RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
+
+    //Rxanimation
+    implementation "com.mikhaellopez:rxanimation:$rx_animation_version"
 
     // Test helpers room
     testImplementation "androidx.room:room-testing:$room_version"
