@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/upComingAnimesFragment">
+
+    <fragment
+        android:id="@+id/upComingAnimesFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.upComingAnimes.UpComingAnimesFragment"
+        android:label="fragment_up_coming_animes"
+        tools:layout="@layout/fragment_up_coming_animes" >
+        <action
+            android:id="@+id/action_upComingAnimesFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/trendingFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.airingAnimes.AiringFragment"
+        android:label="TrendingFragment" >
+        <action
+            android:id="@+id/action_trendingFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/animeDetailFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.animeDetail.AnimeDetailFragment"
+        android:label="anime_detail_fragment"
+        tools:layout="@layout/anime_detail_fragment" >
+        <argument
+            android:name="malId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="imageUrl"
+            app:argType="string"
+            android:defaultValue='""' />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.favourites.FavouriteFragment"
+        android:label="favourite_fragment"
+        tools:layout="@layout/favourite_fragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.sanmidev.yetanotheranimelist.feature.profile.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
+</navigation>

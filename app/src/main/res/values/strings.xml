@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Yet Another Anime List</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_network_error">Could Not Connect To Server</string>
+    <string name="res_does_not_exist">Resource does not exist</string>
+    <string name="txt_genre">Genres</string>
+    <string name="anime_picture_dec">Anime Picture</string>
+    <string name="fav_anime_error_txt">Error could not favourite anime</string>
+    <string name="favourite_success_list">Anime has been added to favourites list</string>
+    <string name="unfavourite_anime_success_txt">Anime has been removed from favourites</string>
+    <string name="txt_sysnopsis">Synopsis</string>
+    <string name="trending_anime_txt">Trending Animes</string>
+    <string name="upcoming_anime_txt">Upcoming Animes</string>
+    <string name="favourite_anime_txt">Favourite Anime</string>
+    <string name="profile_txt">My Profile</string>
 </resources>
