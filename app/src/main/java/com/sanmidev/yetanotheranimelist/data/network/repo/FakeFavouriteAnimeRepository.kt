@@ -13,9 +13,6 @@ class FakeFavouriteAnimeRepository : FavouriteAnimeRepository {
         return Single.just(true)
     }
 
-    override fun getAnimeSize(): Int {
-        return 0
-    }
 
     override fun favouriteAnime(
         animeResult: AnimeDetailResult,

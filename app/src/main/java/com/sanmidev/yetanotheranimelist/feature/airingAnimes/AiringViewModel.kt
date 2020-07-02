@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
@@ -20,12 +21,12 @@ class AiringViewModel(
 
     private val nextAiringAnimeMutableLiveData = MutableLiveData<AnimeListResult>()
 
+    val animeListData = mutableListOf<AnimeEntity>()
+
     private val compositeDisposable = CompositeDisposable()
 
-    private var _currentPage = 1
-
-    val currentPage: Int
-        get() = _currentPage
+    var currentPage: Int = 1
+        private set
 
     val airingLiveData: LiveData<AnimeListResult>
         get() = airingAnimeMutableLiveData
@@ -67,7 +68,7 @@ class AiringViewModel(
     }
 
     fun getNextAiringAnime() {
-        _currentPage += 1
+        currentPage += 1
 
         nextAiringAnimeMutableLiveData.value = AnimeListResult.Loading
 
@@ -78,7 +79,7 @@ class AiringViewModel(
                         nextAiringAnimeMutableLiveData.value = animeListResult
                     },
                     onError = { throwable: Throwable ->
-                        _currentPage -= 1
+                        currentPage -= 1
                         nextAiringAnimeMutableLiveData.value =
                             AnimeListResult.Exception("Could Not Connect To Server", throwable)
                     }
@@ -87,15 +88,30 @@ class AiringViewModel(
         )
     }
 
+    /***
+     * This method add the intitial data gotten from the jikan list api.
+     * @param list is the anime list gotten from the jikan api
+     *
+     */
+    fun addInitialDataToList(list: List<AnimeEntity>) {
+        animeListData.clear()
+        animeListData.addAll(list)
+    }
 
-    fun cancelSubscription() {
-        if(!compositeDisposable.isDisposed){
-            compositeDisposable.dispose()
-        }
+
+    /***
+     * This method add the next data gotten from the jikan list api.
+     * @param list is the anime list gotten from the jikan api
+     *
+     */
+    fun addNextData(list: List<AnimeEntity>) {
+        animeListData.addAll(list)
     }
 
     override fun onCleared() {
-        cancelSubscription()
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.clear()
+        }
         super.onCleared()
 
     }

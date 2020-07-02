@@ -22,11 +22,7 @@ class FavouriteAnimeRepostoryImpl @Inject constructor(
             .observeOn(rxScheduler.main())
     }
 
-    override fun getAnimeSize(): Int {
-        return favouriteAnimeDao.getFavouriteAnimes()
-            .observeOn(rxScheduler.main())
-            .subscribeOn(rxScheduler.io()).blockingGet()
-    }
+
 
     /***
      *
@@ -52,7 +48,7 @@ class FavouriteAnimeRepostoryImpl @Inject constructor(
 
             }
             else -> {
-                favouriteAnimeDao.unFavouriteAnime(animeEntity)
+                favouriteAnimeDao.favouriteAnime(animeEntity)
                     .toSingleDefault(FavouriteAnimeResult.favourited)
             }
         }

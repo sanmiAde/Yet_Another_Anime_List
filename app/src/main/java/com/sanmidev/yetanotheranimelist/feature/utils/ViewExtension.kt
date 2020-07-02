@@ -16,10 +16,18 @@ fun View.visible() {
     this.visibility = View.VISIBLE
 }
 
-fun fireToast(context: Context, message : String){
-    Toast.makeText( context, message, Toast.LENGTH_SHORT).show()
+fun fireToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
+
+inline fun View.showIf(condition: (View) -> Boolean) {
+    if (condition(this)) {
+        visible()
+    } else {
+        gone()
+    }
+}
 
 /***
  * Iniialises the toolbar button with a black icon

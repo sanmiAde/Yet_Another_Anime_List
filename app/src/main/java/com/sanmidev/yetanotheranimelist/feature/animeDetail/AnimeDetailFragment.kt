@@ -3,13 +3,11 @@ package com.sanmidev.yetanotheranimelist.feature.animeDetail
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
@@ -20,13 +18,12 @@ import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDeta
 import com.sanmidev.yetanotheranimelist.databinding.AnimeDetailFragmentBinding
 import com.sanmidev.yetanotheranimelist.di.module.GlideApp
 import com.sanmidev.yetanotheranimelist.feature.utils.fireToast
-import com.sanmidev.yetanotheranimelist.feature.utils.gone
 import com.sanmidev.yetanotheranimelist.feature.utils.initToolbarButton
-import com.sanmidev.yetanotheranimelist.feature.utils.visible
+import com.sanmidev.yetanotheranimelist.feature.utils.showIf
 import javax.inject.Inject
 
 
-class AnimeDetailFragment : Fragment() {
+class AnimeDetailFragment : Fragment(R.layout.anime_detail_fragment) {
 
     private var detailFragmentBinding: AnimeDetailFragmentBinding? = null
 
@@ -51,13 +48,7 @@ class AnimeDetailFragment : Fragment() {
         )
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        detailFragmentBinding = AnimeDetailFragmentBinding.inflate(inflater)
-        return binding.root
-    }
+
 
 
     override fun onAttach(context: Context) {
@@ -68,6 +59,8 @@ class AnimeDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        detailFragmentBinding = AnimeDetailFragmentBinding.bind(view)
 
         GlideApp.with(this).load(args.imageUrl)
             .into(binding.imgAnimePicture)
@@ -83,31 +76,26 @@ class AnimeDetailFragment : Fragment() {
      *  OBserves the network state of get anime detail from the api.
      */
     private fun initObserveGetDetailState() {
-        viewModel.animeDetailResultState.observe(viewLifecycleOwner, Observer { animeDetailResult ->
+        viewModel.animeDetailResultState.observe(viewLifecycleOwner) { animeDetailResult ->
+
+            binding.pbAnimeDetail.showIf { animeDetailResult is AnimeDetailResult.Loading }
+            binding.floatingActionButton.showIf { animeDetailResult is AnimeDetailResult.Success }
+
             when (animeDetailResult) {
-                AnimeDetailResult.Loading -> {
-                    binding.pbAnimeDetail.visible()
-                    binding.floatingActionButton.hide()
-                }
                 is AnimeDetailResult.Success -> {
-                    binding.pbAnimeDetail.gone()
-                    binding.floatingActionButton.show()
 
                     bindSuccessData(animeDetailResult)
                     viewModel.hasBeenFavourited()
                 }
                 is AnimeDetailResult.APIerror -> {
-                    binding.pbAnimeDetail.gone()
 
                     fireToast(requireContext(), animeDetailResult.jikanErrorRespone.message)
                 }
                 is AnimeDetailResult.Exception -> {
-                    binding.pbAnimeDetail.gone()
-
                     fireToast(requireContext(), animeDetailResult.message)
                 }
             }
-        })
+        }
     }
 
     private fun initOnclickListeners() {
@@ -119,26 +107,36 @@ class AnimeDetailFragment : Fragment() {
 
 
     private fun initObserveIsFavouriteState() {
-        viewModel.isFavourited.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.isFavourited.observe(viewLifecycleOwner) { result ->
             when (result) {
                 FavouriteAnimeResult.favourited -> {
 
-                    binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),  R.drawable.ic_favorite_24dp));
+                    binding.floatingActionButton.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_favorite_24dp
+                        )
+                    );
                 }
                 FavouriteAnimeResult.unFavourited -> {
 
-                    binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),  R.drawable.ic_favorite_unfav_24dp));
+                    binding.floatingActionButton.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_favorite_unfav_24dp
+                        )
+                    );
                 }
                 is FavouriteAnimeResult.error -> {
                     fireToast(requireContext(), getString(R.string.fav_anime_error_txt))
                 }
 
             }
-        })
+        }
     }
 
     /***
-     * Using to tweak collasping toolbar so the title of the anime only shows when the toolbar is collasped.
+     * Used to tweak collasping toolbar so the title of the anime only shows when the toolbar is collasped.
      */
     private fun tweakCollaspingToolbar(){
         var isShow = true
@@ -199,9 +197,9 @@ class AnimeDetailFragment : Fragment() {
         super.onDetach()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         detailFragmentBinding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     companion object {
