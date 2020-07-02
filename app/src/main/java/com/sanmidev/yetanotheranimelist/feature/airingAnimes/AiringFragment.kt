@@ -2,14 +2,12 @@ package com.sanmidev.yetanotheranimelist.feature.airingAnimes
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,9 +17,8 @@ import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.databinding.FragmentAiringBinding
 import com.sanmidev.yetanotheranimelist.feature.common.recyclerview.AnimeListAdapter
-import com.sanmidev.yetanotheranimelist.feature.utils.gone
 import com.sanmidev.yetanotheranimelist.feature.utils.navigateSafely
-import com.sanmidev.yetanotheranimelist.feature.utils.visible
+import com.sanmidev.yetanotheranimelist.feature.utils.showIf
 import com.sanmidev.yetanotheranimelist.utils.EndlessRecyclerViewScrollListener
 import io.cabriole.decorator.ColumnProvider
 import io.cabriole.decorator.GridMarginDecoration
@@ -29,7 +26,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class AiringFragment : Fragment() {
+class AiringFragment : Fragment(R.layout.fragment_airing) {
 
     private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
 
@@ -50,20 +47,16 @@ class AiringFragment : Fragment() {
         ViewModelProvider(this, viewModelFactory).get(AiringViewModel::class.java)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        fragmentAiringBinding = FragmentAiringBinding.inflate(inflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fragmentAiringBinding = FragmentAiringBinding.bind(view)
+
         initRecyclerView()
         initToolBar()
         observeNextAnimeList()
+
     }
 
     private fun initToolBar() {
@@ -143,22 +136,20 @@ class AiringFragment : Fragment() {
     }
 
     private fun observerGetUpComingAnimeNetworkState() {
-        viewModel.airingLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
+
+        viewModel.airingLiveData.observe(viewLifecycleOwner) { animeListResult ->
+
+            binding.pbAiring.showIf { animeListResult == AnimeListResult.Loading }
+
             when (animeListResult) {
-                is AnimeListResult.Loading -> {
-
-                    binding.pbAiring.visible()
-
-                }
                 is AnimeListResult.Success -> {
 
                     val animeList = animeListResult.data.animeEnities.toMutableList()
-                    animeListAdaper?.submitList(animeList)
-                    binding.pbAiring.gone()
+                    viewModel.addInitialDataToList(animeList)
+                    animeListAdaper?.submitList(viewModel.animeListData)
                 }
 
                 is AnimeListResult.APIerror -> {
-                    binding.pbAiring.gone()
 
                     val apiError = animeListResult.jikanErrorRespone
                     Timber.d(apiError.toString())
@@ -167,33 +158,28 @@ class AiringFragment : Fragment() {
 
                     Toast.makeText(requireContext(), animeListResult.message, Toast.LENGTH_SHORT)
                         .show()
-                    binding.pbAiring.gone()
+
                 }
             }
-        })
+        }
     }
 
     private fun observeNextAnimeList() {
-        viewModel.nextAiringLiveData.observe(viewLifecycleOwner, Observer { animeListResult ->
+        viewModel.nextAiringLiveData.observe(viewLifecycleOwner) { animeListResult ->
+
+            binding.pbAiring.showIf { animeListResult == AnimeListResult.Loading }
+
             when (animeListResult) {
-                is AnimeListResult.Loading -> {
 
-                    binding.pbAiring.visible()
-
-                }
                 is AnimeListResult.Success -> {
 
-                    binding.pbAiring.gone()
+                    val nextAnimeList = animeListResult.data.animeEnities.toMutableList()
+                    viewModel.addNextData(nextAnimeList)
 
-                    val animeList = animeListResult.data.animeEnities.toMutableList()
-                    val existingAnimeList = animeListAdaper?.currentList?.toMutableList()
-                    existingAnimeList?.addAll(animeList)
-
-                    animeListAdaper?.submitList(existingAnimeList)
+                    animeListAdaper?.submitList(viewModel.animeListData)
                 }
 
                 is AnimeListResult.APIerror -> {
-                    binding.pbAiring.gone()
 
                     val apiError = animeListResult.jikanErrorRespone
                     if (apiError.message != getString(R.string.res_does_not_exist)) {
@@ -204,10 +190,9 @@ class AiringFragment : Fragment() {
 
                     Toast.makeText(requireContext(), animeListResult.message, Toast.LENGTH_SHORT)
                         .show()
-                    binding.pbAiring.gone()
                 }
             }
-        })
+        }
     }
 
 
@@ -219,10 +204,12 @@ class AiringFragment : Fragment() {
                 }
 
             }
+
+
     }
 
     override fun onDetach() {
-        viewModel.cancelSubscription()
+
         super.onDetach()
     }
 

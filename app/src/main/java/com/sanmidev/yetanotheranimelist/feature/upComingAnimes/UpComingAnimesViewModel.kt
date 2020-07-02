@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
@@ -19,19 +20,20 @@ class UpComingAnimesViewModel(
     private val application: Application
 ) : ViewModel() {
 
-    private var getUpComingAnimesMutableLiveData: MutableLiveData<AnimeListResult> =
+    private val getUpComingAnimesMutableLiveData: MutableLiveData<AnimeListResult> =
         MutableLiveData<AnimeListResult>()
 
 
-    private var getNextUpComingAnimesMutableLiveData: MutableLiveData<AnimeListResult> =
+    private val getNextUpComingAnimesMutableLiveData: MutableLiveData<AnimeListResult> =
         MutableLiveData<AnimeListResult>()
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var _currentPage = 1
+    val animeMutableListData = mutableListOf<AnimeEntity>()
 
-    val currentPage: Int
-        get() = _currentPage
+
+    var currentPage: Int = 1
+        private set
 
     val nextUpComingLiveData: LiveData<AnimeListResult>
         get() = getNextUpComingAnimesMutableLiveData
@@ -65,7 +67,7 @@ class UpComingAnimesViewModel(
 
         compositeDisposable.add(
 
-            jikanRepository.getUpComingAnimeList(_currentPage)
+            jikanRepository.getUpComingAnimeList(currentPage)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
                 .subscribeBy(
@@ -85,12 +87,12 @@ class UpComingAnimesViewModel(
 
     fun getNextUpComingAnimes() {
 
-        _currentPage += 1
+        currentPage += 1
 
         getNextUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
 
         compositeDisposable.add(
-            jikanRepository.getUpComingAnimeList(_currentPage)
+            jikanRepository.getUpComingAnimeList(currentPage)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
                 .subscribeBy(
@@ -99,7 +101,7 @@ class UpComingAnimesViewModel(
                         Timber.d(throwable.localizedMessage)
 
                         //If request is not successful, set currentPage to the previous page.
-                        _currentPage -= 1
+                        currentPage -= 1
 
                         getNextUpComingAnimesMutableLiveData.value =
                             AnimeListResult.Exception(throwable.localizedMessage, throwable)
@@ -113,17 +115,31 @@ class UpComingAnimesViewModel(
         )
     }
 
+    /***
+     * This method add the intitial data gotten from the jikan list api.
+     * @param list is the anime list gotten from the jikan api
+     *
+     */
+    fun addInitialDataToList(list: List<AnimeEntity>) {
+        animeMutableListData.clear()
+        animeMutableListData.addAll(list)
+    }
 
-    fun cancelSubscriptions() {
-        if(!compositeDisposable.isDisposed){
-            compositeDisposable.dispose()
-        }
 
+    /***
+     * This method add the next data gotten from the jikan list api.
+     * @param list is the anime list gotten from the jikan api
+     *
+     */
+    fun addNextData(list: List<AnimeEntity>) {
+        animeMutableListData.addAll(list)
     }
 
 
     override fun onCleared() {
-     cancelSubscriptions()
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.clear()
+        }
         super.onCleared()
     }
 

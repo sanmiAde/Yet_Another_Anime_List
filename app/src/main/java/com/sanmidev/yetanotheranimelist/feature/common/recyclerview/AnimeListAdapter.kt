@@ -18,8 +18,7 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
     inner  class AnimeListViewHolder(val binding : AnimeListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            animeEntity: AnimeEntity,
-            onAnimeImageClickListener: (AnimeEntity) -> Unit
+            animeEntity: AnimeEntity
         ){
 
             GlideApp
@@ -30,9 +29,7 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
 
             binding.txtAnimeTitle.text = animeEntity.title
 
-            binding.root.setOnClickListener {
-                onAnimeImageClickListener.invoke(animeEntity)
-            }
+
 
         }
 
@@ -40,12 +37,20 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeListViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val asoebiBindingImpl = AnimeListItemBinding.inflate(layoutInflater, parent, false)
-        return AnimeListViewHolder(asoebiBindingImpl)
+        val binding = AnimeListItemBinding.inflate(layoutInflater, parent, false)
+
+        val holder = AnimeListViewHolder(binding)
+
+        binding.root.setOnClickListener {
+
+            onAnimeImageClickListener.invoke(getItem(holder.adapterPosition))
+        }
+
+        return holder
     }
 
     override fun onBindViewHolder(holder: AnimeListViewHolder, position: Int) {
-        holder.bind(getItem(position), onAnimeImageClickListener)
+        holder.bind(getItem(position))
     }
 
     /***
