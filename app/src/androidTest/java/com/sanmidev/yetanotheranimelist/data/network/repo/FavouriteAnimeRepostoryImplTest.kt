@@ -105,7 +105,6 @@ class FavouriteAnimeRepostoryImplTest {
     @Test
     fun favouriteAnime_shouldReturnUnFavourited_whenAnimeHasBeenFavourited() {
 
-
         val newFavouriteAnime = AndroidDataUtils.generateAnimeDetailData(faker).second
 
         //WHEN
@@ -114,6 +113,43 @@ class FavouriteAnimeRepostoryImplTest {
         //THEN
         Truth.assertThat(result).isInstanceOf(FavouriteAnimeResult.unFavourited::class.java)
 
+    }
 
+    @Test
+    fun getFavouriteAnimeList_shouldReturnFavouriteAnimes_whenAnimesHasBeenFavourited(){
+        //GIVEN
+        val listOfFavouriteAnimes = favouriteAnimeList()
+
+        //WHEN
+        val favouriteAnimeListFromDB = SUT.getAnimeList().test().values()[0]
+
+        //THEN
+        Truth.assertThat(favouriteAnimeListFromDB).containsExactlyElementsIn(listOfFavouriteAnimes)
+    }
+
+
+    @Test
+    fun getFavouriteAnimeList_shouldReturnEmpty_whenAnimesHasBeenFavourited(){
+
+        //WHEN
+        val favouriteAnimeListFromDB = SUT.getAnimeList().test().values()[0]
+
+        //THEN
+        Truth.assertThat(favouriteAnimeListFromDB).containsExactlyElementsIn(emptyList<AnimeEntity>())
+    }
+    private fun favouriteAnimeList(): List<AnimeEntity> {
+
+        val newFavouriteAnime1 = AnimeEntity("http:/image.jpg", 34561, "My name is anime")
+        favouriteAnimeDao?.favouriteAnime(newFavouriteAnime1)!!.test()
+
+        val newFavouriteAnime2 = AnimeEntity("http:/image1.jpg", 34362, "My name is anime1")
+        favouriteAnimeDao?.favouriteAnime(newFavouriteAnime2)!!.test()
+
+        val newFavouriteAnime = AnimeEntity("http:/image2.jpg", 34532, "My name is anime2")
+        favouriteAnimeDao?.favouriteAnime(newFavouriteAnime)!!.test()
+
+        val listOfFavouriteAnimes =
+            listOf<AnimeEntity>(newFavouriteAnime, newFavouriteAnime1, newFavouriteAnime2)
+        return listOfFavouriteAnimes
     }
 }
