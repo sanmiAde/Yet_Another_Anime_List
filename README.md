@@ -18,8 +18,8 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 *   [Mockito-Kotlin](https://github.com/nhaarman/mockito-kotlin)
 *   [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 *   [Faker](https://github.com/DiUS/java-faker)
-    [Mockwebserver](https://github.com/square/okhttp/tree/master/mockwebserver)
-    [Lottie](https://github.com/airbnb/lottie-android)
+*   [Mockwebserver](https://github.com/square/okhttp/tree/master/mockwebserver)
+*    [Lottie](https://github.com/airbnb/lottie-android)
 *   [Truth](https://github.com/google/truth)
 *  
 *   
