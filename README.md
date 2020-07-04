@@ -28,7 +28,7 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 <h4 align="center">
 <img src="https://res.cloudinary.com/dabxauefu/image/upload/v1593889410/Screenshot_2020-07-04-19-28-47-449_com.sanmidev.yetanotheranimelist.debug_pkmfbg.jpg" width="30%" vspace="10" hspace="10">
 <img src="https://res.cloudinary.com/dabxauefu/image/upload/v1593889380/Screenshot_2020-07-04-19-28-56-737_com.sanmidev.yetanotheranimelist.debug_bsg6cg.jpg" width="30%" vspace="10" hspace="10">
-<img src="https://res.cloudinary.com/dabxauefu/image/upload/v1593889305/Screenshot_2020-07-04-19-28-47-449_com.sanmidev.yetanotheranimelist.debug_mjtj96.jpg" width="30%" vspace="10" hspace="10""><br>
+<img src="https://res.cloudinary.com/dabxauefu/image/upload/v1593889592/Screenshot_2020-07-04-19-29-17-099_com.sanmidev.yetanotheranimelist.debug_btyuxf.jpg" width="30%" vspace="10" hspace="10""><br>
 
 ## Author
 Oluwasanmi Aderibigbe
