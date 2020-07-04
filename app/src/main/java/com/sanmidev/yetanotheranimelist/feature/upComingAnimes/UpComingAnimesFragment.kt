@@ -3,7 +3,6 @@ package com.sanmidev.yetanotheranimelist.feature.upComingAnimes
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -96,37 +95,16 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
             this.adapter = animeListAdaper
             this.layoutManager = gridLayoutManager
 
-            val spacing = context.resources.getDimensionPixelSize(R.dimen.offset_size)
 
             this.addItemDecoration(
                 GridMarginDecoration(
-                    margin = spacing,
+                    margin = context.resources.getDimensionPixelSize(R.dimen.offset_size),
                     columnProvider = object : ColumnProvider {
                         override fun getNumberOfColumns(): Int = 2
                     },
                     orientation = RecyclerView.VERTICAL
                 )
             )
-
-            //init grid auto layout (it's hacker though)
-            this.viewTreeObserver.addOnGlobalLayoutListener(
-                object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        binding.upComingAnimeList.viewTreeObserver.removeOnGlobalLayoutListener(
-                            this
-                        )
-
-                        val viewWidth: Int =
-                            binding.upComingAnimeList.measuredWidth
-                        val cardViewWidth =
-                            requireContext().resources.getDimensionPixelSize(R.dimen.anime_image_width)
-                                .toInt()
-
-                        val newSpanCount = Math.floor(viewWidth / cardViewWidth.toDouble()).toInt()
-                        gridLayoutManager.spanCount = newSpanCount
-                        gridLayoutManager.requestLayout()
-                    }
-                })
 
             endlessRecyclerViewScrollListener?.let {
                 this.addOnScrollListener(it)
@@ -182,7 +160,7 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
 
                     viewModel.addNextData(animeList)
 
-                    animeListAdaper?.submitList(animeList)
+                    animeListAdaper?.submitList(viewModel.animeMutableListData)
                 }
 
                 is AnimeListResult.APIerror -> {

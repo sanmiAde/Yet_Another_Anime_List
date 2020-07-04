@@ -11,6 +11,4 @@ interface JikanRepository {
     fun getUpComingAnimeList(page : Int): Single<AnimeListResult>
     fun getAiringAnimes(page: Int): Single<AnimeListResult>
     fun getAnimeDetail(malId: Int): Single<AnimeDetailResult>
-
-
 }

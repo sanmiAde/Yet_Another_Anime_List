@@ -1,8 +1,8 @@
 package com.sanmidev.yetanotheranimelist.data.network.repo
 
 import com.sanmidev.yetanotheranimelist.data.local.dao.FavouriteAnimeDao
-import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.utils.RxScheduler
 import io.reactivex.Observable
@@ -22,8 +22,6 @@ class FavouriteAnimeRepostoryImpl @Inject constructor(
             .observeOn(rxScheduler.main())
     }
 
-
-
     /***
      *
      */
@@ -39,7 +37,6 @@ class FavouriteAnimeRepostoryImpl @Inject constructor(
             successResult.data.id,
             successResult.data.title
         )
-
 
         return when {
             hasBeenSaved -> {
@@ -57,6 +54,7 @@ class FavouriteAnimeRepostoryImpl @Inject constructor(
 
     override fun getAnimeList(): Observable<List<AnimeEntity>> {
         return favouriteAnimeDao.getAnimeList()
+
     }
 
 

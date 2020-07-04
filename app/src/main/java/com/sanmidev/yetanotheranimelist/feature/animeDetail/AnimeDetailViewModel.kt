@@ -4,8 +4,8 @@ import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
-import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.GenreEntity
+import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
@@ -128,8 +128,8 @@ class AnimeDetailViewModel(
     fun hasBeenFavourited() {
         favouriteAnimeRepostoryImpl.hasBeenSaved(id).subscribeBy({
 
-        }, {
-            if (it) {
+        }, { hasBeenSaved ->
+            if (hasBeenSaved) {
                 isFavouritedMutableLiveData.value = FavouriteAnimeResult.favourited
             } else {
                 isFavouritedMutableLiveData.value = FavouriteAnimeResult.unFavourited
@@ -149,8 +149,13 @@ class AnimeDetailViewModel(
         }
     }
 
+
     fun processGenre(genreEntities: List<GenreEntity>): List<String> {
         return genreEntities.map { it.name }
+    }
+
+    companion object {
+        const val ANIME_DETAIL_KEY = "com.sanmidev.yetanotheranimelist.anime_detail_key"
     }
 
 }

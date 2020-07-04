@@ -8,8 +8,8 @@ import com.google.common.truth.Truth
 import com.sanmidev.yetanotheranimelist.AndroidDataUtils
 import com.sanmidev.yetanotheranimelist.data.local.dao.FavouriteAnimeDao
 import com.sanmidev.yetanotheranimelist.data.local.db.FavouriteAnimeDatabase
-import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
+import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
 import org.junit.After
@@ -46,7 +46,6 @@ class FavouriteAnimeRepostoryImplTest {
     @After
     fun tearDown() {
         db!!.close()
-        SUT.clearDisposable()
     }
 
     @Test

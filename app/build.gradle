@@ -44,6 +44,9 @@ android {
             }
         }
         debug {
+            minifyEnabled false
+            debuggable = true
+            shrinkResources false
             applicationIdSuffix = '.debug'
             versionNameSuffix = '.debug'
             buildConfigField "String", "BASE_URL", '"https://api.jikan.moe/"'

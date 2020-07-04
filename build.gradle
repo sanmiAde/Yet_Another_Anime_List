@@ -22,12 +22,12 @@ buildscript {
 
         //moshi
         moshi_version = '1.9.2'
-        moshi_converter_version = '2.3.0'
+        moshi_converter_version = '2.7.1'
 
         //retrofit
-        retrofit_interceptor_version = '4.2.1'
-        retrofit_version = '2.3.0'
-        rx_java_adapter_version = '2.3.0'
+        retrofit_interceptor_version = '4.5.0'
+        retrofit_version = '2.9.0'
+        rx_java_adapter_version = '2.5.0'
 
         //rxjava
         rx_java2_version = '2.2.19'
@@ -73,7 +73,7 @@ buildscript {
         truth_version = "1.0.1"
 
         //Decorator
-        decorator_version = "1.1.0"
+        decorator_version = "1.2.0"
 
         //Facebook shimmer
         facebook_shimmer_version = "0.5.0"

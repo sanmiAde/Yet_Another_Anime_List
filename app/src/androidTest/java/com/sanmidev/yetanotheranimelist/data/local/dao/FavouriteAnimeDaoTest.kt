@@ -4,9 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.common.truth.Truth
 import com.sanmidev.yetanotheranimelist.data.local.db.FavouriteAnimeDatabase
-import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeEntity
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

@@ -52,7 +52,11 @@
         android:id="@+id/favouriteFragment"
         android:name="com.sanmidev.yetanotheranimelist.feature.favourites.FavouriteFragment"
         android:label="favourite_fragment"
-        tools:layout="@layout/favourite_fragment" />
+        tools:layout="@layout/favourite_fragment">
+        <action
+            android:id="@+id/action_favouriteFragment_to_animeDetailFragment"
+            app:destination="@id/animeDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.sanmidev.yetanotheranimelist.feature.profile.ProfileFragment"

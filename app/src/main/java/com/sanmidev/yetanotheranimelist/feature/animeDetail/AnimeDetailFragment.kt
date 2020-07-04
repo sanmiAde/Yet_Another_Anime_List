@@ -13,7 +13,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
 import com.sanmidev.yetanotheranimelist.MainActivity
 import com.sanmidev.yetanotheranimelist.R
-import com.sanmidev.yetanotheranimelist.data.local.model.FavouriteAnimeResult
+import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.databinding.AnimeDetailFragmentBinding
 import com.sanmidev.yetanotheranimelist.di.module.GlideApp

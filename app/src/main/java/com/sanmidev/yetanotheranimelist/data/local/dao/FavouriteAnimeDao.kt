@@ -15,7 +15,6 @@ interface FavouriteAnimeDao {
     @Delete
     fun unFavouriteAnime(favouriteAnime: AnimeEntity) : Completable
 
-
     @Query("SELECT COUNT (*) FROM anime_entity_table WHERE id = :malID ")
     fun getAnime(malID : Int): Single<Int>
 

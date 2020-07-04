@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.data.local.model
+package com.sanmidev.yetanotheranimelist.data.local.model.favourite
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

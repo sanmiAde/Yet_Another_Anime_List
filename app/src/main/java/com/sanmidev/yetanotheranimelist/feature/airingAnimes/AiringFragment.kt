@@ -3,7 +3,6 @@ package com.sanmidev.yetanotheranimelist.feature.airingAnimes
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +24,7 @@ import io.cabriole.decorator.GridMarginDecoration
 import timber.log.Timber
 import javax.inject.Inject
 
+typealias AnimeDetailOnClick = (AnimeEntity) -> Unit
 
 class AiringFragment : Fragment(R.layout.fragment_airing) {
 
@@ -79,9 +79,13 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
 
         //init adapter
         animeListAdaper = AnimeListAdapter(this.requireContext())
-        val animePictureClickListener: (AnimeEntity) -> Unit = { animeEntity: AnimeEntity ->
+        val animePictureClickListener: AnimeDetailOnClick = { animeEntity: AnimeEntity ->
             val directions =
-                AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(animeEntity.id, animeEntity.imageUrl, animeEntity.title)
+                AiringFragmentDirections.actionTrendingFragmentToAnimeDetailFragment(
+                    animeEntity.id,
+                    animeEntity.imageUrl,
+                    animeEntity.title
+                )
 
             findNavController().navigateSafely(directions, R.id.trendingFragment)
         }
@@ -93,38 +97,21 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
             this.adapter = animeListAdaper
             this.layoutManager = gridLayoutManager
 
-            val spacing = context.resources.getDimensionPixelSize(R.dimen.offset_size)
+//            val spacing = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//                16.toFloat(),
+//                context.resources.displayMetrics
+//            ).toInt()
 
             this.addItemDecoration(
                 GridMarginDecoration(
-                    margin = spacing,
+                    margin = resources.getDimensionPixelSize(R.dimen.offset_size),
                     columnProvider = object : ColumnProvider {
                         override fun getNumberOfColumns(): Int = 2
                     },
                     orientation = RecyclerView.VERTICAL
                 )
             )
-
-            //init grid auto layout (it's hacker though)
-            this.viewTreeObserver.addOnGlobalLayoutListener(
-                object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        binding.rvAiring.viewTreeObserver.removeOnGlobalLayoutListener(
-                            this
-                        )
-
-                        val viewWidth: Int =
-                            binding.rvAiring.measuredWidth
-                        val cardViewWidth =
-                            requireContext().resources.getDimensionPixelSize(R.dimen.anime_image_width)
-                                .toInt()
-
-                        val newSpanCount =
-                            Math.floor(viewWidth / cardViewWidth.toDouble()).toInt()
-                        gridLayoutManager.spanCount = newSpanCount
-                        gridLayoutManager.requestLayout()
-                    }
-                })
 
             endlessRecyclerViewScrollListener?.let {
                 this.addOnScrollListener(it)
