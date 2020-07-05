@@ -3,7 +3,9 @@
 [![codebeat badge](https://codebeat.co/badges/53339772-b0b0-4aa9-95fe-38642f526ee7)](https://codebeat.co/projects/github-com-sanmiade-yet_another_anime_list-dev)
 
 # YetAnotherAnimeList
-Yet Another Anime List displays a list of trending and upcoming animes, and details about the animes. It allows users to favourite animes they like. 
+I just finished reading Android Test-Driven Development book by Raywenderlich, so I decided to make an application to practice what i learnt from the book. You can get the book here, https://store.raywenderlich.com/products/android-test-driven-development-by-tutorials.
+
+Yet Another Anime List displays a list of trending and upcoming animes, and details about the animes. It allows users to favourite animes they like. It was developed using Test Driven Development And Continous Integration using Bitrise.
 
 
 ## Libraries
@@ -30,6 +32,7 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 * Integration testing ViewModels with Truth and Mockito.
 * Dependency injection with Dagger2.
 * MVVM achitecture.
+* Continous Integration using Bitrise.
 
 <h2 align="left">Screenshots</h2>
 <h4 align="center">
