@@ -17,7 +17,6 @@ import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListRe
 
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
-import com.sanmidev.yetanotheranimelist.data.network.repo.FakeCrashingReportService
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
@@ -57,7 +56,6 @@ class AiringViewModelTest {
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
     private val testAppScheduler = TestAppScheduler()
-    private val fakeSaas = FakeCrashingReportService()
 
     @Mock
     lateinit var observer: Observer<AnimeListResult>
@@ -75,7 +73,8 @@ class AiringViewModelTest {
         moshi = NetworkTestUtils.moshi
         generatedData = DataUtils.generateAnimeListResponse(faker)
         jikanService = retrofit.create(JikanService::class.java)
-        jikanRepository = JikanRepositoryImpl(jikanService, animeListMapper,animeDetailMapper, moshi, fakeSaas)
+        jikanRepository =
+            JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
 
 
         dispatcher = object : Dispatcher() {

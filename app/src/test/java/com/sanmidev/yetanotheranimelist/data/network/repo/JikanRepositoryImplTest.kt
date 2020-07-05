@@ -41,7 +41,7 @@ class JikanRepositoryImplTest {
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
-    private val fakeSaas = FakeCrashingReportService()
+
 
     @Before
     fun setUp() {
@@ -50,7 +50,7 @@ class JikanRepositoryImplTest {
         generatedAnimeListData = DataUtils.generateAnimeListResponse(faker)
         generatedAnimeDetailData = DataUtils.generateAnimeDetailData(faker)
         jikanService = retrofit.create(JikanService::class.java)
-        SUT = JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi, fakeSaas)
+        SUT = JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
     }
 
     @Test

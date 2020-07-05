@@ -7,7 +7,7 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 
 
 ## Libraries
-*    [Dagger2](https://github.com/google/dagger)
+*   [Dagger2](https://github.com/google/dagger)
 *   [AssistedInject](https://github.com/square/AssistedInject)
 *   [Room]
 *   [Rxjava](https://github.com/ReactiveX/RxJava)
@@ -19,10 +19,17 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 *   [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 *   [Faker](https://github.com/DiUS/java-faker)
 *   [Mockwebserver](https://github.com/square/okhttp/tree/master/mockwebserver)
-*    [Lottie](https://github.com/airbnb/lottie-android)
+*   [Lottie](https://github.com/airbnb/lottie-android)
 *   [Truth](https://github.com/google/truth)
-*  
-*   
+*   [Glide4](https://bumptech.github.io/glide/doc/download-setup.html)
+
+##Features
+* Local persistence with Room.
+* Unit and Integration testing the network layer with Truth and Mockwebserver.
+* Unit testing the database layer with Truth and inMemory Database.
+* Integration testing ViewModels with Truth and Mockito.
+* Dependency injection with Dagger2.
+* MVVM achitecture.
 
 <h2 align="left">Screenshots</h2>
 <h4 align="center">

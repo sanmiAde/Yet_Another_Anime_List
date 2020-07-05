@@ -15,7 +15,7 @@ import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
-import com.sanmidev.yetanotheranimelist.data.network.repo.FakeCrashingReportService
+
 import com.sanmidev.yetanotheranimelist.data.network.repo.FakeFavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
@@ -53,7 +53,6 @@ class AnimeDetailViewModelTest {
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
     private lateinit var dispatcher: Dispatcher
-    private val fakeSaas = FakeCrashingReportService()
     private val fakeFavouriteAnimeRepository = FakeFavouriteAnimeRepository()
 
     @Mock
@@ -70,7 +69,7 @@ class AnimeDetailViewModelTest {
         generatedData = DataUtils.generateAnimeDetailData(faker)
         jikanService = retrofit.create(JikanService::class.java)
         jikanRepository =
-            JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi, fakeSaas)
+            JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
 
 
         dispatcher = NetworkTestUtils.getAnimeDetailDispatcher(generatedData)

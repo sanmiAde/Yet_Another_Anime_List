@@ -15,8 +15,8 @@ android {
         applicationId "com.sanmidev.yetanotheranimelist"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "0.5"
+        versionCode 2
+        versionName "0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -109,8 +109,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // Test helpers for LiveData
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
-    implementation 'com.google.firebase:firebase-analytics:17.4.1'
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'

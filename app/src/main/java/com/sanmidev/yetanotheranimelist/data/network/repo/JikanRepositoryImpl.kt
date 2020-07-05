@@ -25,8 +25,7 @@ class JikanRepositoryImpl @Inject constructor(
     private val jikanService: JikanService,
     private val animeListMapper: AnimeListMapper,
     private val animeDetailMapper: AnimeDetailMapper,
-    private val moshi: Moshi,
-    private val crashingReportService: CrashingReportService
+    private val moshi: Moshi
 ) : JikanRepository {
 
     /***
@@ -76,7 +75,7 @@ class JikanRepositoryImpl @Inject constructor(
                             AnimeDetailResult.Success(animeDetailEntity)
                         }
                     } catch (ex: Exception) {
-                        crashingReportService.logException(ex)
+
                         AnimeDetailResult.Exception("Error occured.", Throwable(ex))
                     }
                 }
@@ -89,7 +88,7 @@ class JikanRepositoryImpl @Inject constructor(
                             AnimeDetailResult.APIerror(it)
                         }
                     } catch (ex: Exception) {
-                        crashingReportService.logException(ex)
+
                         AnimeDetailResult.Exception("Error occured.", Throwable(ex))
                     }
                 }
@@ -117,7 +116,7 @@ class JikanRepositoryImpl @Inject constructor(
                         AnimeListResult.Success(animeEnities)
                     }
                 } catch (ex: Exception) {
-                    crashingReportService.logException(ex)
+
                     AnimeListResult.Exception("Error occured.", Throwable(ex))
                 }
 
@@ -133,7 +132,7 @@ class JikanRepositoryImpl @Inject constructor(
                         AnimeListResult.APIerror(it)
                     }
                 } catch (ex: Exception) {
-                    crashingReportService.logException(ex)
+
                     AnimeListResult.Exception("Error occured.", Throwable(ex))
                 }
 
