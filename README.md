@@ -25,7 +25,7 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 *   [Truth](https://github.com/google/truth)
 *   [Glide4](https://bumptech.github.io/glide/doc/download-setup.html)
 
-##Features
+## Features
 * Local persistence with Room.
 * Unit and Integration testing the network layer with Truth and Mockwebserver.
 * Unit testing the database layer with Truth and inMemory Database.
