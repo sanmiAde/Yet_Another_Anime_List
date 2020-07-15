@@ -20,10 +20,10 @@ class FakeFavouriteAnimeRepository : FavouriteAnimeRepository {
     ): Single<out FavouriteAnimeResult> {
         return when {
             hasBeenSaved -> {
-                Single.just(FavouriteAnimeResult.unFavourited)
+                Single.just(FavouriteAnimeResult.UnFavourited)
             }
             else -> {
-                Single.just(FavouriteAnimeResult.favourited)
+                Single.just(FavouriteAnimeResult.Favourited)
             }
 
         }

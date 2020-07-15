@@ -65,6 +65,7 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
         super.submitList(list?.let { ArrayList(it) })
     }
 
+
     fun setAnimeImageClickListener(listener: AnimeDetailOnClick) {
         onAnimeImageClickListener = listener
     }

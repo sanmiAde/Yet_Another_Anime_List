@@ -41,12 +41,12 @@ class FavouriteAnimeRepostoryImpl @Inject constructor(
         return when {
             hasBeenSaved -> {
                 favouriteAnimeDao.unFavouriteAnime(animeEntity)
-                    .toSingleDefault(FavouriteAnimeResult.unFavourited)
+                    .toSingleDefault(FavouriteAnimeResult.UnFavourited)
 
             }
             else -> {
                 favouriteAnimeDao.favouriteAnime(animeEntity)
-                    .toSingleDefault(FavouriteAnimeResult.favourited)
+                    .toSingleDefault(FavouriteAnimeResult.Favourited)
             }
         }
     }

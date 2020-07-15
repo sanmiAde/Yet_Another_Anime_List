@@ -56,6 +56,11 @@ class AiringViewModel(
             jikanRepository.getAiringAnimes(currentPage).subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main()).subscribeBy(
                     onSuccess = { animeListResult: AnimeListResult ->
+
+                        if (animeListResult is AnimeListResult.Success) {
+                            animeListData.addAll(animeListResult.data.animeEnities)
+                        }
+
                         airingAnimeMutableLiveData.value = animeListResult
                     },
                     onError = { throwable: Throwable ->

@@ -29,7 +29,10 @@ class UpComingAnimesViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-    val animeMutableListData = mutableListOf<AnimeEntity>()
+    private val animeMutableListData = mutableListOf<AnimeEntity>()
+
+    val animeListData: List<AnimeEntity>
+        get() = animeMutableListData
 
 
     var currentPage: Int = 1
@@ -78,6 +81,9 @@ class UpComingAnimesViewModel(
                             AnimeListResult.Exception("Could Not Connect To Server", throwable)
                     },
                     onSuccess = { animeListResult: AnimeListResult ->
+                        if (animeListResult is AnimeListResult.Success) {
+                            animeMutableListData.addAll(animeListResult.data.animeEnities)
+                        }
 
                         getUpComingAnimesMutableLiveData.value = animeListResult
                     }

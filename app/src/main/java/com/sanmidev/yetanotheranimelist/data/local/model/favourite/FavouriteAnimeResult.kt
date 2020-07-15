@@ -2,9 +2,9 @@ package com.sanmidev.yetanotheranimelist.data.local.model.favourite
 
 sealed class FavouriteAnimeResult {
 
-    object favourited : FavouriteAnimeResult()
+    object Favourited : FavouriteAnimeResult()
 
-    object unFavourited : FavouriteAnimeResult()
+    object UnFavourited : FavouriteAnimeResult()
 
-    class error(val errorMessages: String, throwable: Throwable) : FavouriteAnimeResult()
+    class Error(val errorMessages: String, throwable: Throwable) : FavouriteAnimeResult()
 }

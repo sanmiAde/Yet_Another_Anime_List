@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.feature.utils
+package com.sanmidev.yetanotheranimelist.utils.ui
 
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections

@@ -16,9 +16,9 @@ import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.databinding.FragmentUpComingAnimesBinding
 import com.sanmidev.yetanotheranimelist.feature.common.recyclerview.AnimeListAdapter
-import com.sanmidev.yetanotheranimelist.feature.utils.navigateSafely
-import com.sanmidev.yetanotheranimelist.feature.utils.showIf
-import com.sanmidev.yetanotheranimelist.utils.EndlessRecyclerViewScrollListener
+import com.sanmidev.yetanotheranimelist.utils.ui.initEndlessScrollListener
+import com.sanmidev.yetanotheranimelist.utils.ui.navigateSafely
+import com.sanmidev.yetanotheranimelist.utils.ui.showIf
 import io.cabriole.decorator.ColumnProvider
 import io.cabriole.decorator.GridMarginDecoration
 import timber.log.Timber
@@ -31,7 +31,7 @@ import javax.inject.Inject
 //TODO create a base fragment and viewmodel for both upcoming and airing fragment
 class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
 
-    private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
+
 
     private var animeUpComingAnimesBinding: FragmentUpComingAnimesBinding? = null
 
@@ -72,7 +72,7 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
 
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
 
-        initEndlessScrollListener(gridLayoutManager)
+
 
         //init adapter
         animeListAdaper = AnimeListAdapter(this.requireContext())
@@ -106,9 +106,8 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
                 )
             )
 
-            endlessRecyclerViewScrollListener?.let {
-                this.addOnScrollListener(it)
-            }
+            initEndlessScrollListener { viewModel.getNextUpComingAnimes() }
+            // initEndlessScrollListener(gridLayoutManager)
 
         }
 
@@ -126,9 +125,8 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
 
                 is AnimeListResult.Success -> {
 
-                    val animeList = animeListResult.data.animeEnities.toMutableList()
-                    viewModel.addInitialDataToList(animeList)
-                    animeListAdaper?.submitList(viewModel.animeMutableListData)
+
+                    animeListAdaper?.submitList(viewModel.animeListData.toMutableList())
 
 
                 }
@@ -156,11 +154,8 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
             when (animeListResult) {
                 is AnimeListResult.Success -> {
 
-                    val animeList = animeListResult.data.animeEnities.toMutableList()
 
-                    viewModel.addNextData(animeList)
-
-                    animeListAdaper?.submitList(viewModel.animeMutableListData)
+                    animeListAdaper?.submitList(viewModel.animeListData.toMutableList())
                 }
 
                 is AnimeListResult.APIerror -> {
@@ -182,15 +177,7 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
     }
 
 
-    private fun initEndlessScrollListener(gridLayoutManager: GridLayoutManager) {
-        endlessRecyclerViewScrollListener =
-            object : EndlessRecyclerViewScrollListener(gridLayoutManager) {
-                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                    viewModel.getNextUpComingAnimes()
-                }
 
-            }
-    }
 
     override fun onDetach() {
         super.onDetach()

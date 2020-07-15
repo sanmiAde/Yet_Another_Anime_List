@@ -130,9 +130,9 @@ class AnimeDetailViewModel(
 
         }, { hasBeenSaved ->
             if (hasBeenSaved) {
-                isFavouritedMutableLiveData.value = FavouriteAnimeResult.favourited
+                isFavouritedMutableLiveData.value = FavouriteAnimeResult.Favourited
             } else {
-                isFavouritedMutableLiveData.value = FavouriteAnimeResult.unFavourited
+                isFavouritedMutableLiveData.value = FavouriteAnimeResult.UnFavourited
             }
         }).addTo(compositeDisposable)
     }

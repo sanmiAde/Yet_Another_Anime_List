@@ -96,7 +96,7 @@ class FavouriteAnimeRepostoryImplTest {
         val result = isFavourited.values()[0]
         //THEN
         isFavourited.assertNoErrors()
-        Truth.assertThat(result).isInstanceOf(FavouriteAnimeResult.favourited::class.java)
+        Truth.assertThat(result).isInstanceOf(FavouriteAnimeResult.Favourited::class.java)
 
     }
 
@@ -110,7 +110,7 @@ class FavouriteAnimeRepostoryImplTest {
         val isFavourited = SUT.favouriteAnime(AnimeDetailResult.Success(newFavouriteAnime), true).test()
         val result = isFavourited.values()[0]
         //THEN
-        Truth.assertThat(result).isInstanceOf(FavouriteAnimeResult.unFavourited::class.java)
+        Truth.assertThat(result).isInstanceOf(FavouriteAnimeResult.UnFavourited::class.java)
 
     }
 

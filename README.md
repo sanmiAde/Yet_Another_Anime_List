@@ -31,6 +31,7 @@ Yet Another Anime List displays a list of trending and upcoming animes, and deta
 * Dependency injection with Dagger2.
 * MVVM achitecture.
 
+
 <h2 align="left">Screenshots</h2>
 <h4 align="center">
 <img src="https://res.cloudinary.com/dabxauefu/image/upload/v1593889410/Screenshot_2020-07-04-19-28-47-449_com.sanmidev.yetanotheranimelist.debug_pkmfbg.jpg" width="30%" vspace="10" hspace="10">

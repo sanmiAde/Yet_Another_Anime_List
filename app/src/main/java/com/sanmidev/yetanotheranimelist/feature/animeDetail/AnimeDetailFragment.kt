@@ -17,9 +17,9 @@ import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnim
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.databinding.AnimeDetailFragmentBinding
 import com.sanmidev.yetanotheranimelist.di.module.GlideApp
-import com.sanmidev.yetanotheranimelist.feature.utils.fireToast
-import com.sanmidev.yetanotheranimelist.feature.utils.initToolbarButton
-import com.sanmidev.yetanotheranimelist.feature.utils.showIf
+import com.sanmidev.yetanotheranimelist.utils.ui.fireToast
+import com.sanmidev.yetanotheranimelist.utils.ui.initToolbarButton
+import com.sanmidev.yetanotheranimelist.utils.ui.showIf
 import javax.inject.Inject
 
 
@@ -89,10 +89,16 @@ class AnimeDetailFragment : Fragment(R.layout.anime_detail_fragment) {
                 }
                 is AnimeDetailResult.APIerror -> {
 
-                    fireToast(requireContext(), animeDetailResult.jikanErrorRespone.message)
+                    fireToast(
+                        requireContext(),
+                        animeDetailResult.jikanErrorRespone.message
+                    )
                 }
                 is AnimeDetailResult.Exception -> {
-                    fireToast(requireContext(), animeDetailResult.message)
+                    fireToast(
+                        requireContext(),
+                        animeDetailResult.message
+                    )
                 }
             }
         }
@@ -108,30 +114,30 @@ class AnimeDetailFragment : Fragment(R.layout.anime_detail_fragment) {
 
     private fun initObserveIsFavouriteState() {
         viewModel.isFavourited.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                FavouriteAnimeResult.favourited -> {
 
-                    binding.floatingActionButton.setImageDrawable(
+            binding.floatingActionButton.setImageDrawable(
+                when (result) {
+                    FavouriteAnimeResult.Favourited -> {
                         ContextCompat.getDrawable(
                             requireContext(),
                             R.drawable.ic_favorite_24dp
                         )
-                    );
-                }
-                FavouriteAnimeResult.unFavourited -> {
-
-                    binding.floatingActionButton.setImageDrawable(
+                    }
+                    FavouriteAnimeResult.UnFavourited -> {
                         ContextCompat.getDrawable(
                             requireContext(),
                             R.drawable.ic_favorite_unfav_24dp
                         )
-                    );
+                    }
+                    is FavouriteAnimeResult.Error -> {
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_favorite_unfav_24dp
+                        )
+                    }
                 }
-                is FavouriteAnimeResult.error -> {
-                    fireToast(requireContext(), getString(R.string.fav_anime_error_txt))
-                }
+            )
 
-            }
         }
     }
 
@@ -149,14 +155,18 @@ class AnimeDetailFragment : Fragment(R.layout.anime_detail_fragment) {
                 binding.collapsingToolBar.title = args.title
                 binding.AppBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
                 isShow = true
-            } else if (isShow){
+            } else if (isShow) {
                 binding.AppBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-                binding.collapsingToolBar.title = " " //careful there should a space between double quote otherwise it wont work
+                binding.collapsingToolBar.title =
+                    " " //careful there should a space between double quote otherwise it wont work
                 isShow = false
             }
         })
 
-        initToolbarButton(requireActivity(), binding.AppBar)
+        initToolbarButton(
+            requireActivity(),
+            binding.AppBar
+        )
     }
 
     /***
@@ -192,10 +202,6 @@ class AnimeDetailFragment : Fragment(R.layout.anime_detail_fragment) {
 
     }
 
-    override fun onDetach() {
-        viewModel.disposeCompositeDisposable()
-        super.onDetach()
-    }
 
     override fun onDestroyView() {
         detailFragmentBinding = null

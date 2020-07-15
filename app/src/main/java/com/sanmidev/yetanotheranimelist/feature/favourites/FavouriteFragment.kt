@@ -16,8 +16,8 @@ import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnim
 import com.sanmidev.yetanotheranimelist.databinding.FavouriteFragmentBinding
 import com.sanmidev.yetanotheranimelist.feature.airingAnimes.AnimeDetailOnClick
 import com.sanmidev.yetanotheranimelist.feature.common.recyclerview.AnimeListAdapter
-import com.sanmidev.yetanotheranimelist.feature.utils.navigateSafely
-import com.sanmidev.yetanotheranimelist.feature.utils.showIf
+import com.sanmidev.yetanotheranimelist.utils.ui.navigateSafely
+import com.sanmidev.yetanotheranimelist.utils.ui.showIf
 import io.cabriole.decorator.ColumnProvider
 import io.cabriole.decorator.GridMarginDecoration
 import timber.log.Timber

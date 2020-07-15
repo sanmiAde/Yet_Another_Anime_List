@@ -16,9 +16,9 @@ import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.databinding.FragmentAiringBinding
 import com.sanmidev.yetanotheranimelist.feature.common.recyclerview.AnimeListAdapter
-import com.sanmidev.yetanotheranimelist.feature.utils.navigateSafely
-import com.sanmidev.yetanotheranimelist.feature.utils.showIf
-import com.sanmidev.yetanotheranimelist.utils.EndlessRecyclerViewScrollListener
+import com.sanmidev.yetanotheranimelist.utils.ui.initEndlessScrollListener
+import com.sanmidev.yetanotheranimelist.utils.ui.navigateSafely
+import com.sanmidev.yetanotheranimelist.utils.ui.showIf
 import io.cabriole.decorator.ColumnProvider
 import io.cabriole.decorator.GridMarginDecoration
 import timber.log.Timber
@@ -27,8 +27,6 @@ import javax.inject.Inject
 typealias AnimeDetailOnClick = (AnimeEntity) -> Unit
 
 class AiringFragment : Fragment(R.layout.fragment_airing) {
-
-    private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
 
 
     private var animeListAdaper: AnimeListAdapter? = null
@@ -75,7 +73,7 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
 
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
 
-        initEndlessScrollListener(gridLayoutManager)
+
 
         //init adapter
         animeListAdaper = AnimeListAdapter(this.requireContext())
@@ -97,11 +95,7 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
             this.adapter = animeListAdaper
             this.layoutManager = gridLayoutManager
 
-//            val spacing = TypedValue.applyDimension(
-//                TypedValue.COMPLEX_UNIT_DIP,
-//                16.toFloat(),
-//                context.resources.displayMetrics
-//            ).toInt()
+
 
             this.addItemDecoration(
                 GridMarginDecoration(
@@ -113,9 +107,8 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
                 )
             )
 
-            endlessRecyclerViewScrollListener?.let {
-                this.addOnScrollListener(it)
-            }
+
+            initEndlessScrollListener { viewModel.getNextAiringAnime() }
 
         }
 
@@ -131,8 +124,6 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
             when (animeListResult) {
                 is AnimeListResult.Success -> {
 
-                    val animeList = animeListResult.data.animeEnities.toMutableList()
-                    viewModel.addInitialDataToList(animeList)
                     animeListAdaper?.submitList(viewModel.animeListData)
                 }
 
@@ -183,17 +174,6 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
     }
 
 
-    private fun initEndlessScrollListener(gridLayoutManager: GridLayoutManager) {
-        endlessRecyclerViewScrollListener =
-            object : EndlessRecyclerViewScrollListener(gridLayoutManager) {
-                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                    viewModel.getNextAiringAnime()
-                }
-
-            }
-
-
-    }
 
     override fun onDetach() {
 
