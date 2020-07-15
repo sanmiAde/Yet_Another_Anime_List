@@ -153,14 +153,10 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
 
             when (animeListResult) {
                 is AnimeListResult.Success -> {
-
-
                     animeListAdaper?.submitList(viewModel.animeListData.toMutableList())
                 }
 
                 is AnimeListResult.APIerror -> {
-
-
                     val apiError = animeListResult.jikanErrorRespone
                     if (apiError.message != getString(R.string.res_does_not_exist)) {
                         Timber.d(apiError.message)
@@ -168,6 +164,7 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
                 }
                 is AnimeListResult.Exception -> {
 
+                    
                     Toast.makeText(requireContext(), animeListResult.message, Toast.LENGTH_SHORT)
                         .show()
 
