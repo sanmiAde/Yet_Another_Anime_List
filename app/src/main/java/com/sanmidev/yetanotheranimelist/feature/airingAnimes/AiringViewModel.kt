@@ -7,23 +7,23 @@ import androidx.lifecycle.ViewModelProvider
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
-import com.sanmidev.yetanotheranimelist.utils.RxScheduler
+import com.sanmidev.yetanotheranimelist.utils.AppScheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 class AiringViewModel(
     private val jikanRepository: JikanRepository,
-    private val rxScheduler: RxScheduler
+    private val appScheduler: AppScheduler
 ) : ViewModel() {
 
     private val airingAnimeMutableLiveData = MutableLiveData<AnimeListResult>()
 
     private val nextAiringAnimeMutableLiveData = MutableLiveData<AnimeListResult>()
 
-    val animeListData = mutableListOf<AnimeEntity>()
-
     private val compositeDisposable = CompositeDisposable()
+
+    val animeListData = mutableListOf<AnimeEntity>()
 
     var currentPage: Int = 1
         private set
@@ -36,10 +36,10 @@ class AiringViewModel(
 
     class VMFactory @Inject constructor(
         private val jikanRepository: JikanRepository,
-        private val rxScheduler: RxScheduler
+        private val appScheduler: AppScheduler
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return AiringViewModel(jikanRepository, rxScheduler) as T
+            return AiringViewModel(jikanRepository, appScheduler) as T
         }
     }
 
@@ -49,12 +49,15 @@ class AiringViewModel(
     }
 
     private fun getAiringAnimes() {
-        airingAnimeMutableLiveData.value = AnimeListResult.Loading
-
 
         compositeDisposable.add(
-            jikanRepository.getAiringAnimes(currentPage).subscribeOn(rxScheduler.io())
-                .observeOn(rxScheduler.main()).subscribeBy(
+            jikanRepository.getAiringAnimes(currentPage)
+                .subscribeOn(appScheduler.io())
+                .observeOn(appScheduler.main())
+                .doOnSubscribe {
+                    airingAnimeMutableLiveData.value = AnimeListResult.Loading
+                }
+                .subscribeBy(
                     onSuccess = { animeListResult: AnimeListResult ->
 
                         if (animeListResult is AnimeListResult.Success) {
@@ -75,12 +78,18 @@ class AiringViewModel(
     fun getNextAiringAnime() {
         currentPage += 1
 
-        nextAiringAnimeMutableLiveData.value = AnimeListResult.Loading
-
         compositeDisposable.add(
-            jikanRepository.getAiringAnimes(currentPage).subscribeOn(rxScheduler.io())
-                .observeOn(rxScheduler.main()).subscribeBy(
+            jikanRepository.getAiringAnimes(currentPage)
+                .subscribeOn(appScheduler.io())
+                .observeOn(appScheduler.main())
+                .doOnSubscribe {
+                    nextAiringAnimeMutableLiveData.value = AnimeListResult.Loading
+                }
+                .subscribeBy(
                     onSuccess = { animeListResult: AnimeListResult ->
+                        if (animeListResult is AnimeListResult.Success) {
+                            animeListData.addAll(animeListResult.data.animeEnities)
+                        }
                         nextAiringAnimeMutableLiveData.value = animeListResult
                     },
                     onError = { throwable: Throwable ->
@@ -93,25 +102,7 @@ class AiringViewModel(
         )
     }
 
-    /***
-     * This method add the intitial data gotten from the jikan list api.
-     * @param list is the anime list gotten from the jikan api
-     *
-     */
-    fun addInitialDataToList(list: List<AnimeEntity>) {
-        animeListData.clear()
-        animeListData.addAll(list)
-    }
 
-
-    /***
-     * This method add the next data gotten from the jikan list api.
-     * @param list is the anime list gotten from the jikan api
-     *
-     */
-    fun addNextData(list: List<AnimeEntity>) {
-        animeListData.addAll(list)
-    }
 
     override fun onCleared() {
         if (!compositeDisposable.isDisposed) {

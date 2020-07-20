@@ -30,8 +30,6 @@ class AnimeListAdapter(val context : Context) : ListAdapter<AnimeEntity, AnimeLi
 
             binding.txtAnimeTitle.text = animeEntity.title
 
-
-
         }
 
     }

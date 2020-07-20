@@ -37,7 +37,7 @@ class JikanApiTest {
     @Test
     fun getUpcomingAnimeList_Calls_The_Correct_API_Successfully() {
         //GIVEN
-        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
+        NetworkTestUtils.getAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
 
         //WHEN
         val testObserver = SUT.getUpandComingAnime("1").test()
@@ -54,7 +54,7 @@ class JikanApiTest {
     @Test
     fun getAiringAnimeList_Calls_The_Correct_API_Successfully(){
         //GIVEN
-        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
+        NetworkTestUtils.getAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
 
         //WHEN
         val testObserver = SUT.getAiringAnimes("1").test()
@@ -70,7 +70,7 @@ class JikanApiTest {
     @Test
     fun getAnimeDetail_Calls_The_Correct_API_Successfully(){
         //GIVEN
-        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
+        NetworkTestUtils.getAnimeListSuccessMockWebserver(mockWebServer, generatedData.first)
 
         //WHEN
         val testObserver = SUT.getDetailAnime("39587").test()

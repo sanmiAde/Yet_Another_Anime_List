@@ -5,13 +5,14 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.javafaker.Faker
 import com.google.common.truth.Truth
-import com.sanmidev.yetanotheranimelist.AndroidDataUtils
+import com.sanmidev.yetanotheranimelist.DataUtils
+import com.sanmidev.yetanotheranimelist.RepoUtils
 import com.sanmidev.yetanotheranimelist.data.local.dao.FavouriteAnimeDao
 import com.sanmidev.yetanotheranimelist.data.local.db.FavouriteAnimeDatabase
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
+import com.sanmidev.yetanotheranimelist.data.local.repo.FavouriteAnimeRepostoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
-import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -21,7 +22,7 @@ class FavouriteAnimeRepostoryImplTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val testAppScheduler = TestAppScheduler()
+    private val testAppScheduler = RepoUtils.ProvideTestScheduler()
 
     private var db: FavouriteAnimeDatabase? = null
 
@@ -40,7 +41,11 @@ class FavouriteAnimeRepostoryImplTest {
 
         favouriteAnimeDao = db!!.favouriteDao()
 
-        SUT = FavouriteAnimeRepostoryImpl((favouriteAnimeDao!!), testAppScheduler)
+        SUT =
+            FavouriteAnimeRepostoryImpl(
+                (favouriteAnimeDao!!),
+                testAppScheduler
+            )
     }
 
     @After
@@ -88,7 +93,7 @@ class FavouriteAnimeRepostoryImplTest {
     @Test
     fun favouriteAnime_shouldReturnSuccess_whenAnimeHasNotBeenFavourired() {
 
-        val newFavouriteAnime = AndroidDataUtils.generateAnimeDetailData(faker).second
+        val newFavouriteAnime = DataUtils.generateAnimeDetailData(faker).second
 
         //WHEN
         val isFavourited =
@@ -104,7 +109,7 @@ class FavouriteAnimeRepostoryImplTest {
     @Test
     fun favouriteAnime_shouldReturnUnFavourited_whenAnimeHasBeenFavourited() {
 
-        val newFavouriteAnime = AndroidDataUtils.generateAnimeDetailData(faker).second
+        val newFavouriteAnime = DataUtils.generateAnimeDetailData(faker).second
 
         //WHEN
         val isFavourited = SUT.favouriteAnime(AnimeDetailResult.Success(newFavouriteAnime), true).test()

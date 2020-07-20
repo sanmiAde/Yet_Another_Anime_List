@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.data.network.repo
+package com.sanmidev.yetanotheranimelist.data.local.repo
 
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult

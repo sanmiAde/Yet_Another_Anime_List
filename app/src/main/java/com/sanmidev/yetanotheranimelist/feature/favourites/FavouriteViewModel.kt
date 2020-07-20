@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeListResult
-import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepository
-import com.sanmidev.yetanotheranimelist.utils.RxScheduler
+import com.sanmidev.yetanotheranimelist.data.local.repo.FavouriteAnimeRepository
+import com.sanmidev.yetanotheranimelist.utils.AppScheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -14,16 +14,16 @@ import javax.inject.Inject
 
 class FavouriteViewModel(
     private val favouriteAnimeRepository: FavouriteAnimeRepository,
-    private val rxScheduler: RxScheduler
+    private val appScheduler: AppScheduler
 ) : ViewModel() {
 
 
     class VMFactory @Inject constructor(
         private val favouriteAnimeRepository: FavouriteAnimeRepository,
-        private val rxScheduler: RxScheduler
+        private val appScheduler: AppScheduler
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return FavouriteViewModel(favouriteAnimeRepository, rxScheduler) as T
+            return FavouriteViewModel(favouriteAnimeRepository, appScheduler) as T
         }
     }
 
@@ -40,11 +40,12 @@ class FavouriteViewModel(
 
     private fun getFavouriteAnimes() {
 
-        animeListMutableLiveData.value = FavouriteAnimeListResult.Loading
-
         favouriteAnimeRepository.getAnimeList()
-            .subscribeOn(rxScheduler.io())
-            .observeOn(rxScheduler.main())
+            .subscribeOn(appScheduler.io())
+            .observeOn(appScheduler.main())
+            .doOnSubscribe {
+                animeListMutableLiveData.value = FavouriteAnimeListResult.Loading
+            }
             .subscribeBy(
                 onComplete = {
 

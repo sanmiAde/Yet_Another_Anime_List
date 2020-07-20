@@ -82,6 +82,16 @@ android {
         }
     }
 
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }
+
 }
 
 dependencies {
@@ -186,8 +196,8 @@ dependencies {
     androidTestImplementation "com.github.javafaker:javafaker:$faker_version"
 
     //mockwebserver
-    testImplementation "com.squareup.okhttp3:mockwebserver:$mock_web_server_version"
-    testImplementation("com.squareup.okhttp3:okhttp:$mock_web_server_version")
+    implementation "com.squareup.okhttp3:mockwebserver:$mock_web_server_version"
+    implementation("com.squareup.okhttp3:okhttp:$mock_web_server_version")
 
     //mockito-kotlin
     testImplementation("com.nhaarman:mockito-kotlin:$mockito_kotlin_version") {

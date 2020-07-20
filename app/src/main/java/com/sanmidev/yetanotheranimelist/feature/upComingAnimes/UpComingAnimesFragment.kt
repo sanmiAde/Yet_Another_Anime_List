@@ -124,11 +124,7 @@ class UpComingAnimesFragment : Fragment(R.layout.fragment_up_coming_animes) {
             when (animeListResult) {
 
                 is AnimeListResult.Success -> {
-
-
                     animeListAdaper?.submitList(viewModel.animeListData.toMutableList())
-
-
                 }
 
                 is AnimeListResult.APIerror -> {

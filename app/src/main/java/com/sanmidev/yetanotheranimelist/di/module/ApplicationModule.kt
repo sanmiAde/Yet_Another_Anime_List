@@ -1,7 +1,7 @@
 package com.sanmidev.yetanotheranimelist.di.module
 
-import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepository
-import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepostoryImpl
+import com.sanmidev.yetanotheranimelist.data.local.repo.FavouriteAnimeRepository
+import com.sanmidev.yetanotheranimelist.data.local.repo.FavouriteAnimeRepostoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.utils.AppScheduler
@@ -15,7 +15,7 @@ abstract class ApplicationModule {
     abstract fun bindsJikanRepository(jikanRepositoryImpl: JikanRepositoryImpl) : JikanRepository
 
     @Binds
-    abstract fun bindRxScheduler(appScheduler: AppScheduler) : RxScheduler
+    abstract fun bindRxScheduler(appScheduler: RxScheduler): AppScheduler
 
     @Binds
     abstract fun bindsFavouriteAnimeRepository(favouriteAnimeRepostoryImpl: FavouriteAnimeRepostoryImpl) : FavouriteAnimeRepository

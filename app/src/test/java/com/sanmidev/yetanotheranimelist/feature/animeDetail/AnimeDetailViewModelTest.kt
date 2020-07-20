@@ -11,17 +11,15 @@ import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.AnimeDetailEnitity
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.GenreEntity
+import com.sanmidev.yetanotheranimelist.data.local.repo.FakeFavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
-
-import com.sanmidev.yetanotheranimelist.data.network.repo.FakeFavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
-import com.squareup.moshi.Moshi
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -32,7 +30,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Retrofit
 
 @RunWith(MockitoJUnitRunner::class)
 class AnimeDetailViewModelTest {
@@ -43,9 +40,7 @@ class AnimeDetailViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var retrofit: Retrofit
     private lateinit var generatedData: Pair<AnimeDetailResponse, AnimeDetailEnitity>
-    private lateinit var moshi: Moshi
     private lateinit var jikanService: JikanService
     private lateinit var jikanRepository: JikanRepository
     private lateinit var SUT: AnimeDetailViewModel
@@ -53,7 +48,8 @@ class AnimeDetailViewModelTest {
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
     private lateinit var dispatcher: Dispatcher
-    private val fakeFavouriteAnimeRepository = FakeFavouriteAnimeRepository()
+    private val fakeFavouriteAnimeRepository =
+        FakeFavouriteAnimeRepository()
 
     @Mock
     lateinit var observer: Observer<AnimeDetailResult>
@@ -64,12 +60,16 @@ class AnimeDetailViewModelTest {
 
     @Before
     fun setUp() {
-        retrofit = NetworkTestUtils.provideRetrofit(mockWebServer)
-        moshi = NetworkTestUtils.moshi
+
         generatedData = DataUtils.generateAnimeDetailData(faker)
-        jikanService = retrofit.create(JikanService::class.java)
+        jikanService = NetworkTestUtils.provideJikanservice(mockWebServer)
         jikanRepository =
-            JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
+            JikanRepositoryImpl(
+                jikanService,
+                animeListMapper,
+                animeDetailMapper,
+                NetworkTestUtils.moshi
+            )
 
 
         dispatcher = NetworkTestUtils.getAnimeDetailDispatcher(generatedData)

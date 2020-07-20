@@ -33,9 +33,6 @@ class FavouriteFragment : Fragment(R.layout.favourite_fragment) {
     private val binding: FavouriteFragmentBinding
         get() = favouriteFragmentBinding!!
 
-    companion object {
-        fun newInstance() = FavouriteFragment()
-    }
 
     @Inject
     lateinit var vmFactory: FavouriteViewModel.VMFactory

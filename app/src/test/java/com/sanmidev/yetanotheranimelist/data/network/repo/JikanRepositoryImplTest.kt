@@ -12,7 +12,6 @@ import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDeta
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponseJsonAdapter
-
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
@@ -23,7 +22,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import retrofit2.Retrofit
 import java.net.HttpURLConnection
 
 class JikanRepositoryImplTest {
@@ -32,7 +30,7 @@ class JikanRepositoryImplTest {
     @get:Rule
     val mockWebServer = MockWebServer()
 
-    private lateinit var retrofit: Retrofit
+
     private lateinit var generatedAnimeListData: Triple<AnimeListResponse, List<AnimeResponse>, List<AnimeEntity>>
     private lateinit var generatedAnimeDetailData : Pair<AnimeDetailResponse, AnimeDetailEnitity>
     private lateinit var moshi: Moshi
@@ -45,11 +43,10 @@ class JikanRepositoryImplTest {
 
     @Before
     fun setUp() {
-        retrofit = NetworkTestUtils.provideRetrofit(mockWebServer)
         moshi = NetworkTestUtils.moshi
         generatedAnimeListData = DataUtils.generateAnimeListResponse(faker)
         generatedAnimeDetailData = DataUtils.generateAnimeDetailData(faker)
-        jikanService = retrofit.create(JikanService::class.java)
+        jikanService = NetworkTestUtils.provideJikanservice(mockWebServer)
         SUT = JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
     }
 
@@ -77,7 +74,7 @@ class JikanRepositoryImplTest {
 
     fun getUpComingAnimes_shouldReturnError404_whenResourceDoesNotExist() {
         //GIVEN
-        NetworkTestUtils.initAnimeListErrorResponseMockWebServer(
+        NetworkTestUtils.getAnimeListErrorResponseMockWebServer(
             mockWebServer,
             DataUtils.getAnimeListErrorResponse()
         )
@@ -104,7 +101,10 @@ class JikanRepositoryImplTest {
     @Test
     fun getCurrentlyAiringAnimes_shouldReturnListOfCurrentlyAiringAnimes_whenRequestIsSuccessful() {
         //GIVEN
-        NetworkTestUtils.initAnimeListSuccessMockWebserver(mockWebServer, generatedAnimeListData.first)
+        NetworkTestUtils.getAnimeListSuccessMockWebserver(
+            mockWebServer,
+            generatedAnimeListData.first
+        )
 
         //WHEN
         val testObserver = SUT.getAiringAnimes(1).test()
@@ -120,7 +120,7 @@ class JikanRepositoryImplTest {
     @Test
     fun getCurrentlyAiringAnimes_shouldReturnErrorResponse_whenResourceDoesNotExist() {
         //GIVEN
-        NetworkTestUtils.initAnimeListErrorResponseMockWebServer(
+        NetworkTestUtils.getAnimeListErrorResponseMockWebServer(
             mockWebServer,
             DataUtils.getAnimeListErrorResponse()
         )

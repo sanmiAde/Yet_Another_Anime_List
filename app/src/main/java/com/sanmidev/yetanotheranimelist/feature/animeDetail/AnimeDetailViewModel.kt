@@ -6,10 +6,10 @@ import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.GenreEntity
 import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
+import com.sanmidev.yetanotheranimelist.data.local.repo.FavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResult
-import com.sanmidev.yetanotheranimelist.data.network.repo.FavouriteAnimeRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
-import com.sanmidev.yetanotheranimelist.utils.RxScheduler
+import com.sanmidev.yetanotheranimelist.utils.AppScheduler
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.disposables.CompositeDisposable
@@ -20,7 +20,7 @@ import timber.log.Timber
 class AnimeDetailViewModel(
     private val jikanRepository: JikanRepository,
     private val favouriteAnimeRepostoryImpl: FavouriteAnimeRepository,
-    private val rxScheduler: RxScheduler,
+    private val appScheduler: AppScheduler,
     private val application: Application,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -49,7 +49,7 @@ class AnimeDetailViewModel(
     class VmFactory @AssistedInject constructor(
         private val jikanRepository: JikanRepository,
         private val favouriteAnimeRepostoryImpl: FavouriteAnimeRepository,
-        private val rxScheduler: RxScheduler,
+        private val appScheduler: AppScheduler,
         private val application: Application,
         @Assisted savedStateRegistryOwner: SavedStateRegistryOwner,
         @Assisted defaultArgs: Bundle
@@ -62,7 +62,7 @@ class AnimeDetailViewModel(
             return AnimeDetailViewModel(
                 jikanRepository,
                 favouriteAnimeRepostoryImpl,
-                rxScheduler,
+                appScheduler,
                 application,
                 handle
             ) as T
@@ -89,8 +89,8 @@ class AnimeDetailViewModel(
 
         compositeDisposable.add(
             jikanRepository.getAnimeDetail(id)
-                .subscribeOn(rxScheduler.io())
-                .observeOn(rxScheduler.main())
+                .subscribeOn(appScheduler.io())
+                .observeOn(appScheduler.main())
                 .subscribeBy(
                     onError = {
                         Timber.d(it.toString())
@@ -111,8 +111,8 @@ class AnimeDetailViewModel(
 
         favouriteAnimeRepostoryImpl.hasBeenSaved(id).flatMap {
             favouriteAnimeRepostoryImpl.favouriteAnime(animeResult, it)
-                .subscribeOn(rxScheduler.io())
-                .observeOn(rxScheduler.main())
+                .subscribeOn(appScheduler.io())
+                .observeOn(appScheduler.main())
         }.subscribeBy(
                 onSuccess = {
                     isFavouritedMutableLiveData.value = it

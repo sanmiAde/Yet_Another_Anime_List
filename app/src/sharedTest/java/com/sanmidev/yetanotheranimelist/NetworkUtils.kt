@@ -3,10 +3,11 @@ package com.sanmidev.yetanotheranimelist
 import com.sanmidev.yetanotheranimelist.data.local.model.animedetail.AnimeDetailEnitity
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDetailResponseJsonAdapter
-import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorRespone
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponseJsonAdapter
+import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorRespone
 import com.sanmidev.yetanotheranimelist.data.network.model.error.JikanErrorResponeJsonAdapter
+import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.mockwebserver.Dispatcher
@@ -20,25 +21,23 @@ import java.net.HttpURLConnection
 
 object NetworkTestUtils {
     val moshi by lazy {
-
         Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-
     }
 
     fun provideRetrofit(mockWebServer: MockWebServer): Retrofit {
         return Retrofit.Builder()
-// 1
             .baseUrl(mockWebServer.url("/"))
-// 2
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-// 3
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-// 4
             .build()
     }
 
+    fun provideJikanservice(mockWebServer: MockWebServer): JikanService {
+        return provideRetrofit(mockWebServer).create(JikanService::class.java)
+    }
 
-    fun initAnimeListSuccessMockWebserver(
+
+    fun getAnimeListSuccessMockWebserver(
         mockWebServer: MockWebServer,
         generatedData: AnimeListResponse
     ) {
@@ -49,14 +48,22 @@ object NetworkTestUtils {
         )
     }
 
-    fun initAnimeDetailSuccessMockWebServer(mockWebServer: MockWebServer, data : AnimeDetailResponse){
-        mockWebServer.enqueue(MockResponse().setBody(
-           AnimeDetailResponseJsonAdapter(moshi).toJson(data)
-        ).setResponseCode(HttpURLConnection.HTTP_OK))
+    fun getAnimeDetailSuccessMockWebServer(
+        mockWebServer: MockWebServer,
+        data: AnimeDetailResponse
+    ) {
+        mockWebServer.enqueue(
+            MockResponse().setBody(
+                AnimeDetailResponseJsonAdapter(moshi).toJson(data)
+            ).setResponseCode(HttpURLConnection.HTTP_OK)
+        )
     }
 
 
-    fun initAnimeListErrorResponseMockWebServer(mockWebServer: MockWebServer, errorRespone: JikanErrorRespone){
+    fun getAnimeListErrorResponseMockWebServer(
+        mockWebServer: MockWebServer,
+        errorRespone: JikanErrorRespone
+    ) {
         mockWebServer.enqueue(
             MockResponse()
                 .setBody(JikanErrorResponeJsonAdapter(moshi).toJson(DataUtils.getAnimeListErrorResponse()))

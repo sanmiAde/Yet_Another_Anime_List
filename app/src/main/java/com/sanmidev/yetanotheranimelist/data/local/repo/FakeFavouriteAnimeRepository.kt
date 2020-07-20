@@ -1,4 +1,4 @@
-package com.sanmidev.yetanotheranimelist.data.network.repo
+package com.sanmidev.yetanotheranimelist.data.local.repo
 
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.local.model.favourite.FavouriteAnimeResult
@@ -6,7 +6,8 @@ import com.sanmidev.yetanotheranimelist.data.network.model.animedetail.AnimeDeta
 import io.reactivex.Observable
 import io.reactivex.Single
 
-class FakeFavouriteAnimeRepository : FavouriteAnimeRepository {
+class FakeFavouriteAnimeRepository :
+    FavouriteAnimeRepository {
 
 
     override fun hasBeenSaved(malID: Int): Single<Boolean> {

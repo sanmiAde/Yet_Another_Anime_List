@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -41,10 +41,7 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
         get() = fragmentAiringBinding!!
 
 
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(AiringViewModel::class.java)
-    }
-
+    private val viewModel by viewModels<AiringViewModel> { viewModelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,11 +66,7 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
 
 
     private fun initRecyclerView() {
-
-
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
-
-
 
         //init adapter
         animeListAdaper = AnimeListAdapter(this.requireContext())
@@ -95,8 +88,6 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
             this.adapter = animeListAdaper
             this.layoutManager = gridLayoutManager
 
-
-
             this.addItemDecoration(
                 GridMarginDecoration(
                     margin = resources.getDimensionPixelSize(R.dimen.offset_size),
@@ -107,9 +98,7 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
                 )
             )
 
-
             initEndlessScrollListener { viewModel.getNextAiringAnime() }
-
         }
 
         observerGetUpComingAnimeNetworkState()
@@ -123,7 +112,6 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
 
             when (animeListResult) {
                 is AnimeListResult.Success -> {
-
                     animeListAdaper?.submitList(viewModel.animeListData)
                 }
 
@@ -151,9 +139,6 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
 
                 is AnimeListResult.Success -> {
 
-                    val nextAnimeList = animeListResult.data.animeEnities.toMutableList()
-                    viewModel.addNextData(nextAnimeList)
-
                     animeListAdaper?.submitList(viewModel.animeListData)
                 }
 
@@ -171,13 +156,6 @@ class AiringFragment : Fragment(R.layout.fragment_airing) {
                 }
             }
         }
-    }
-
-
-
-    override fun onDetach() {
-
-        super.onDetach()
     }
 
     override fun onDestroyView() {

@@ -9,6 +9,7 @@ import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.verify
 import com.sanmidev.yetanotheranimelist.DataUtils
 import com.sanmidev.yetanotheranimelist.NetworkTestUtils
+import com.sanmidev.yetanotheranimelist.RepoUtils
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
@@ -34,7 +35,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Retrofit
 import java.net.HttpURLConnection
 
 @RunWith(MockitoJUnitRunner::class)
@@ -46,7 +46,6 @@ class UpComingAnimesViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var retrofit: Retrofit
     private lateinit var generatedData: Triple<AnimeListResponse, List<AnimeResponse>, List<AnimeEntity>>
     private lateinit var moshi: Moshi
     private lateinit var jikanService: JikanService
@@ -55,8 +54,8 @@ class UpComingAnimesViewModelTest {
     private val faker = Faker()
     private val animeListMapper = AnimeListMapper()
     private val animeDetailMapper = AnimeDetailMapper()
-    private  lateinit var dispatcher : Dispatcher
-
+    private lateinit var dispatcher: Dispatcher
+    private lateinit var testAppScheduler: TestAppScheduler
 
     @Mock
     lateinit var observer: Observer<AnimeListResult>
@@ -71,10 +70,10 @@ class UpComingAnimesViewModelTest {
 
     @Before
     fun setUp() {
-        retrofit = NetworkTestUtils.provideRetrofit(mockWebServer)
+        testAppScheduler = RepoUtils.ProvideTestScheduler()
         moshi = NetworkTestUtils.moshi
         generatedData = DataUtils.generateAnimeListResponse(faker)
-        jikanService = retrofit.create(JikanService::class.java)
+        jikanService = NetworkTestUtils.provideJikanservice(mockWebServer)
         jikanRepository =
             JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
 
@@ -106,7 +105,7 @@ class UpComingAnimesViewModelTest {
         mockWebServer.dispatcher =  dispatcher
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT = UpComingAnimesViewModel(jikanRepository, testAppScheduler, application)
         SUT.upComingLiveData.observeForever(observer)
 
         //THEN
@@ -125,7 +124,7 @@ class UpComingAnimesViewModelTest {
         )
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT = UpComingAnimesViewModel(jikanRepository, testAppScheduler, application)
         SUT.upComingLiveData.observeForever(observer)
 
 
@@ -142,7 +141,7 @@ class UpComingAnimesViewModelTest {
 
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT = UpComingAnimesViewModel(jikanRepository, testAppScheduler, application)
         SUT.getNextUpComingAnimes()
         SUT.upComingLiveData.observeForever(observer)
         SUT.nextUpComingLiveData.observeForever(observer)
@@ -160,7 +159,7 @@ class UpComingAnimesViewModelTest {
 
 
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT = UpComingAnimesViewModel(jikanRepository, testAppScheduler, application)
         SUT.getNextUpComingAnimes()
         SUT.upComingLiveData.observeForever(observer)
 
@@ -173,7 +172,7 @@ class UpComingAnimesViewModelTest {
         //GIVEN
        mockWebServer.dispatcher = dispatcher
         //WHEN
-        SUT = UpComingAnimesViewModel(jikanRepository, TestAppScheduler(), application)
+        SUT = UpComingAnimesViewModel(jikanRepository, testAppScheduler, application)
         SUT.getNextUpComingAnimes()
         SUT.nextUpComingLiveData.observeForever(observer)
 

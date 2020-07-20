@@ -8,21 +8,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.sanmidev.yetanotheranimelist.data.local.model.animelist.AnimeEntity
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
-import com.sanmidev.yetanotheranimelist.utils.RxScheduler
+import com.sanmidev.yetanotheranimelist.utils.AppScheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import javax.inject.Inject
 
 class UpComingAnimesViewModel(
     private val jikanRepository: JikanRepository,
-    private val rxScheduler: RxScheduler,
+    private val rxScheduler: AppScheduler,
     private val application: Application
 ) : ViewModel() {
 
     private val getUpComingAnimesMutableLiveData: MutableLiveData<AnimeListResult> =
         MutableLiveData<AnimeListResult>()
-
 
     private val getNextUpComingAnimesMutableLiveData: MutableLiveData<AnimeListResult> =
         MutableLiveData<AnimeListResult>()
@@ -55,24 +53,23 @@ class UpComingAnimesViewModel(
 
     class VMFactory @Inject constructor(
         private val jikanRepository: JikanRepository,
-        private val rxScheduler: RxScheduler,
+        private val appScheduler: AppScheduler,
         private val application: Application
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return UpComingAnimesViewModel(jikanRepository, rxScheduler, application) as T
+            return UpComingAnimesViewModel(jikanRepository, appScheduler, application) as T
         }
 
     }
 
-    fun getUpComingAnimes() {
-
-        getUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
-
+    private fun getUpComingAnimes() {
         compositeDisposable.add(
-
             jikanRepository.getUpComingAnimeList(currentPage)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
+                .doOnSubscribe {
+                    getUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
+                }
                 .subscribeBy(
                     onError = { throwable: Throwable ->
 
@@ -95,16 +92,15 @@ class UpComingAnimesViewModel(
 
         currentPage += 1
 
-        getNextUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
-
         compositeDisposable.add(
             jikanRepository.getUpComingAnimeList(currentPage)
                 .subscribeOn(rxScheduler.io())
                 .observeOn(rxScheduler.main())
+                .doOnSubscribe {
+                    getNextUpComingAnimesMutableLiveData.value = AnimeListResult.Loading
+                }
                 .subscribeBy(
                     onError = { throwable: Throwable ->
-
-                        Timber.d(throwable.localizedMessage)
 
                         //If request is not successful, set currentPage to the previous page.
                         currentPage -= 1
@@ -113,33 +109,16 @@ class UpComingAnimesViewModel(
                             AnimeListResult.Exception(throwable.localizedMessage, throwable)
                     },
                     onSuccess = { animeListResult: AnimeListResult ->
+                        if (animeListResult is AnimeListResult.Success) {
+                            animeMutableListData.addAll(animeListResult.data.animeEnities)
+                        }
                         getNextUpComingAnimesMutableLiveData.value = animeListResult
-
 
                     }
                 )
         )
     }
 
-    /***
-     * This method add the intitial data gotten from the jikan list api.
-     * @param list is the anime list gotten from the jikan api
-     *
-     */
-    fun addInitialDataToList(list: List<AnimeEntity>) {
-        animeMutableListData.clear()
-        animeMutableListData.addAll(list)
-    }
-
-
-    /***
-     * This method add the next data gotten from the jikan list api.
-     * @param list is the anime list gotten from the jikan api
-     *
-     */
-    fun addNextData(list: List<AnimeEntity>) {
-        animeMutableListData.addAll(list)
-    }
 
 
     override fun onCleared() {

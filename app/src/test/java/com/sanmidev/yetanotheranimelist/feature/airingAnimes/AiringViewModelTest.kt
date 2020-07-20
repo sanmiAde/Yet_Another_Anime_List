@@ -1,7 +1,5 @@
 package com.sanmidev.yetanotheranimelist.feature.airingAnimes
 
-import android.app.Application
-import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.github.javafaker.Faker
@@ -14,14 +12,12 @@ import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeDetailMapper
 import com.sanmidev.yetanotheranimelist.data.network.mapper.AnimeListMapper
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponse
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResponseJsonAdapter
-
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeListResult
 import com.sanmidev.yetanotheranimelist.data.network.model.animelist.AnimeResponse
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepository
 import com.sanmidev.yetanotheranimelist.data.network.repo.JikanRepositoryImpl
 import com.sanmidev.yetanotheranimelist.data.network.service.JikanService
 import com.sanmidev.yetanotheranimelist.utils.TestAppScheduler
-import com.squareup.moshi.Moshi
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -33,7 +29,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Retrofit
 import java.net.HttpURLConnection
 
 @RunWith(MockitoJUnitRunner::class)
@@ -45,9 +40,8 @@ class AiringViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var retrofit: Retrofit
+
     private lateinit var generatedData: Triple<AnimeListResponse, List<AnimeResponse>, List<AnimeEntity>>
-    private lateinit var moshi: Moshi
     private lateinit var jikanService: JikanService
     private lateinit var jikanRepository: JikanRepository
     private lateinit var SUT: AiringViewModel
@@ -60,21 +54,18 @@ class AiringViewModelTest {
     @Mock
     lateinit var observer: Observer<AnimeListResult>
 
-    @Mock
-    lateinit var application: Application
-
-    @Mock
-    lateinit var applicationContext: Context
-
 
     @Before
     fun setup() {
-        retrofit = NetworkTestUtils.provideRetrofit(mockWebServer)
-        moshi = NetworkTestUtils.moshi
         generatedData = DataUtils.generateAnimeListResponse(faker)
-        jikanService = retrofit.create(JikanService::class.java)
+        jikanService = NetworkTestUtils.provideJikanservice(mockWebServer)
         jikanRepository =
-            JikanRepositoryImpl(jikanService, animeListMapper, animeDetailMapper, moshi)
+            JikanRepositoryImpl(
+                jikanService,
+                animeListMapper,
+                animeDetailMapper,
+                NetworkTestUtils.moshi
+            )
 
 
         dispatcher = object : Dispatcher() {
