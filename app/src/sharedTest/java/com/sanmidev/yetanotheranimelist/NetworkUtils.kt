@@ -48,18 +48,7 @@ object NetworkTestUtils {
         )
     }
 
-    fun getAnimeDetailSuccessMockWebServer(
-        mockWebServer: MockWebServer,
-        data: AnimeDetailResponse
-    ) {
-        mockWebServer.enqueue(
-            MockResponse().setBody(
-                AnimeDetailResponseJsonAdapter(moshi).toJson(data)
-            ).setResponseCode(HttpURLConnection.HTTP_OK)
-        )
-    }
-
-
+    
     fun getAnimeListErrorResponseMockWebServer(
         mockWebServer: MockWebServer,
         errorRespone: JikanErrorRespone
